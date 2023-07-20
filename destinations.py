@@ -148,8 +148,8 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
                 )
             locations_str += location + "\n"
 
-        c.execute("INSERT INTO search_history (user_id, location) VALUES (?, ?)",
-                  (user_id, locations_str))
+        c.execute("INSERT INTO search_history (user_id, location) "
+          "VALUES (?, ?)", (user_id, locations_str))
         conn.commit()
 
 
@@ -182,7 +182,7 @@ create_tables()
 print("Destination Finder")
 print("+-+-+-+-+-+-+-+-+-\n")
 
-print("This destination finder will show tourist destinations in your chosen area")
+print("This destination finder shows tourist destinations in your chosen area")
 print("For best results, enter zipcode or postcode followed by country name")
 print("Example: 12345 United States of America\n")
 
