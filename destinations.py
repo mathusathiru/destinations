@@ -149,7 +149,7 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
             locations_str += location + "\n"
 
         c.execute("INSERT INTO search_history (user_id, location) "
-          "VALUES (?, ?)", (user_id, locations_str))
+                  "VALUES (?, ?)", (user_id, locations_str))
         conn.commit()
 
 
@@ -224,7 +224,8 @@ while True:
                     query = input("Enter location: ")
                     categories_str = choose_categories()
                     latitude, longitude = get_coordinates(query)
-                    get_destinations(latitude, longitude, categories_str, user_id)
+                    get_destinations(
+                        latitude, longitude, categories_str, user_id)
 
                 elif sub_option.upper() == "H":
                     print_search_history(user_id)
@@ -245,7 +246,7 @@ while True:
             c.execute("SELECT username FROM users WHERE username=?", (username,))
 
             if c.fetchone():
-                print("Error: username already exists - choose a different username")
+                print("Error: username already exists - use a different username")
                 if quit_option():
                     break
             else:
