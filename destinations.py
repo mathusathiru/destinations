@@ -48,6 +48,7 @@ def print_search_history(user_id):
             print("Location:", location)
             print("-" * 20)
 
+
 def choose_categories():
 
     categories_dict = {
@@ -72,11 +73,11 @@ def choose_categories():
     time.sleep(0.65)
 
     while True:
-        user_choice = input("\nEnter a category ID to add (or \"F\" to finish): ")
+        user_choice = input("\nEnter an ID to add (or \"F\" to finish): ")
 
         if user_choice.upper() == "F":
             break
-        
+
         try:
             user_id = int(user_choice)
             if user_id in categories_dict.values():
@@ -88,10 +89,11 @@ def choose_categories():
             else:
                 print("Invalid category ID: please try again")
         except ValueError:
-            print("Invalid input: please enter a category ID or \"F\" to finish")
+            print("Invalid input: please enter an ID or \"F\" to finish")
 
     categories_str = categories_str.rstrip(',')
     return categories_str
+
 
 def get_coordinates(search):
 
@@ -117,6 +119,7 @@ def get_coordinates(search):
 
     return None
 
+
 def get_destinations(latitude, longitude, categories_str, user_id=None):
     
     url = "https://api.foursquare.com/v3/places/search"
@@ -141,6 +144,7 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
         c.execute("INSERT INTO search_history (user_id, location) VALUES (?, ?)", (user_id, locations_str))
         conn.commit()
 
+
 def display_locations(results):
     if len(results) == 0:
         print("No destinations found")
@@ -151,6 +155,7 @@ def display_locations(results):
             address = result["location"]["formatted_address"]
             print("Place Name:", name)
             print("Address:", address + "\n")
+
 
 def quit_option():
     time.sleep(0.65)
