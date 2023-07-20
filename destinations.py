@@ -3,6 +3,7 @@ import sqlite3
 import config
 import time
 
+
 def create_tables():
     c.execute("""CREATE TABLE IF NOT EXISTS users (
                  user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +21,8 @@ def create_tables():
 def login():
     username = input("Enter your username: ")
     password = input("Enter your password: ")
-    c.execute("SELECT user_id FROM users WHERE username=? AND password=?", (username, password))
+    c.execute("SELECT user_id FROM users WHERE username=? AND password=?",
+              (username, password))
     user_id = c.fetchone()
     if user_id:
         print("Login successful!")
@@ -61,7 +63,7 @@ def choose_categories():
 
     print("\nLocation Categories:")
     print("Select any number of location categories (or none) to refine your results\n")
-    
+
     for category_name, category_id in categories_dict.items():
         print(f"{category_id}: {category_name}")
     time.sleep(0.65)
@@ -112,7 +114,7 @@ def get_coordinates(search):
 
     return None
 
-def get_destinations(latitude, longitude, categories_str, user_id = None):
+def get_destinations(latitude, longitude, categories_str, user_id=None):
     
     url = "https://api.foursquare.com/v3/places/search"
 
@@ -127,7 +129,7 @@ def get_destinations(latitude, longitude, categories_str, user_id = None):
     else:
         print(data["message"])
 
-    if user_id != None:
+    if user_id is not None:
         locations_str = ""
         for result in data["results"]:
             location = result["name"] + ", " + result["location"]["formatted_address"]
@@ -155,6 +157,7 @@ def quit_option():
     else:
         print()
         return False
+
 
 conn = sqlite3.connect("destination_finder.db")
 c = conn.cursor()
@@ -212,7 +215,7 @@ while True:
 
                 elif sub_option.upper() == "R":
                     break
-        else:        
+        else:
             if quit_option():
                 break
 
