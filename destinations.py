@@ -247,12 +247,13 @@ while True:
                       (username,))
 
             if c.fetchone():
-                print("Error: username already exists - use a different username")
+                print("Username already exists - try another")
                 if quit_option():
                     break
             else:
-                c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
-                          (username, password))
+                c.execute("INSERT INTO users (username, password) "
+                          "VALUES (?, ?)", (username, password))
+
                 conn.commit()
                 print("Account created successfully!")
                 break
