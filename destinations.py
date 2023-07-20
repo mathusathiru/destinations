@@ -114,7 +114,8 @@ def get_coordinates(search):
             print("Error: location not found\n-enter a valid location\n")
         else:
             print("Error: multiple locations or invalid location found\n")
-            print("-check for mispellings or provide a more specific location\n")
+            print("-check for mispellings")
+            print("-provide a more specific location\n")
     else:
         print("Error", str(status_code) + ":", data["status"]["message"])
 
@@ -182,7 +183,7 @@ print("Example: 12345 United States of America\n")
 time.sleep(0.65)
 
 while True:
-    
+
     user_id = None
     
     print("1: Guest Search")
