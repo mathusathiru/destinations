@@ -1,4 +1,4 @@
-This is a destination finder application that primarily allows users to search for tourist destinations in specific locations based on user input.
+This is a destination finder program that primarily allows users to search for tourist destinations in specific locations based on user input.
 
 The application works by obtaining the current location from the user, retrieves the latitude and longitude of the area for precise mapping from OpenCage API, and retrieves locations of interest near to the user's choice using Foursquare API. 
 
