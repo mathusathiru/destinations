@@ -127,7 +127,10 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
     url = "https://api.foursquare.com/v3/places/search"
 
     header = {"accept": "application/json", "Authorization": config.key2}
-    param_dict = {"ll": str(latitude) + "," + str(longitude), "sort": "DISTANCE", "radius": 5000, "categories": categories_str}
+    param_dict = {"ll": str(latitude) + "," + str(longitude),
+                  "sort": "DISTANCE",
+                  "radius": 5000,
+                  "categories": categories_str}
 
     response = requests.get(url, params=param_dict, headers=header)
     data = response.json()
@@ -143,7 +146,8 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
             location = result["name"] + ", " + result["location"]["formatted_address"]
             locations_str += location + "\n"
 
-        c.execute("INSERT INTO search_history (user_id, location) VALUES (?, ?)", (user_id, locations_str))
+        c.execute("INSERT INTO search_history (user_id, location) VALUES (?, ?)",
+                  (user_id, locations_str))
         conn.commit()
 
 
@@ -185,7 +189,7 @@ time.sleep(0.65)
 while True:
 
     user_id = None
-    
+
     print("1: Guest Search")
     print("2: Login")
     print("3: Sign Up")
@@ -202,7 +206,7 @@ while True:
             break
 
     elif option == "2":
-        
+
         user_id = login()
         if user_id is not None:
 
@@ -232,25 +236,26 @@ while True:
     elif option == "3":
 
         while True:
-        
+
             username = input("Enter username: ")
             password = input("Enter password: ")
 
             c.execute("SELECT username FROM users WHERE username=?", (username,))
-            
+
             if c.fetchone():
-                print("Error: username already exists - please choose a different username")
+                print("Error: username already exists - choose a different username")
                 if quit_option():
                     break
             else:
-                c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+                c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
+                          (username, password))
                 conn.commit()
                 print("Account created successfully!")
                 break
-        
+
     elif option.lower() == "q":
         break
-    
+
 c.close()
 conn.close()
 print("\nThank you for using Destination Finder!")
