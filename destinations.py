@@ -111,9 +111,10 @@ def get_coordinates(search):
             longitude = result["geometry"]["lng"]
             return latitude, longitude
         elif data["total_results"] == 0:
-            print("Error: location not found\n- please enter a valid location\n")
+            print("Error: location not found\n-enter a valid location\n")
         else:
-            print("Error: multiple locations or invalid location found\n- please check for mispellings or provide a more specific location\n")
+            print("Error: multiple locations or invalid location found\n")
+            print("-check for mispellings or provide a more specific location\n")
     else:
         print("Error", str(status_code) + ":", data["status"]["message"])
 
@@ -121,7 +122,7 @@ def get_coordinates(search):
 
 
 def get_destinations(latitude, longitude, categories_str, user_id=None):
-    
+
     url = "https://api.foursquare.com/v3/places/search"
 
     header = {"accept": "application/json", "Authorization": config.key2}
