@@ -1,6 +1,47 @@
 import requests
+import sqlite3
 import config
 import time
+
+def create_tables():
+    c.execute("""CREATE TABLE IF NOT EXISTS users (
+                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 username TEXT NOT NULL,
+                 password TEXT NOT NULL
+                 )""")
+
+    c.execute("""CREATE TABLE IF NOT EXISTS search_history (
+                 user_id INTEGER NOT NULL,
+                 location TEXT NOT NULL,
+                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                 FOREIGN KEY (user_id) REFERENCES users (user_id)
+                 )""")
+
+def login():
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+    c.execute("SELECT user_id FROM users WHERE username=? AND password=?", (username, password))
+    user_id = c.fetchone()
+    if user_id:
+        print("Login successful!")
+        return user_id[0]
+    else:
+        print("Invalid username or password.")
+        return None
+
+def print_search_history(user_id):
+    c.execute("SELECT location, timestamp FROM search_history WHERE user_id=?", (user_id,))
+    search_history = c.fetchall()
+
+    if not search_history:
+        print("Search history is empty.")
+    else:
+        print("\nSearch History:")
+        for entry in search_history:
+            location, timestamp = entry
+            print("Timestamp:", timestamp)
+            print("Location:", location)
+            print("-" * 20)
 
 def choose_categories():
 
@@ -63,28 +104,37 @@ def get_coordinates(search):
             longitude = result["geometry"]["lng"]
             return latitude, longitude
         elif data["total_results"] == 0:
-            print("Error: location not found\n- please enter a valid location")
+            print("Error: location not found\n- please enter a valid location\n")
         else:
-            print("Error: multiple locations or invalid location found\n- please check for mispellings or provide a more specific location")
+            print("Error: multiple locations or invalid location found\n- please check for mispellings or provide a more specific location\n")
     else:
         print("Error", str(status_code) + ":", data["status"]["message"])
 
     return None
 
-def get_destinations(latitude, longitude, categories_str):
+def get_destinations(latitude, longitude, categories_str, user_id = None):
     
-        url = "https://api.foursquare.com/v3/places/search"
+    url = "https://api.foursquare.com/v3/places/search"
 
-        header = {"accept": "application/json", "Authorization": config.key2}
-        param_dict = {"ll": str(latitude) + "," + str(longitude), "sort": "DISTANCE", "radius": 5000, "categories": categories_str}
+    header = {"accept": "application/json", "Authorization": config.key2}
+    param_dict = {"ll": str(latitude) + "," + str(longitude), "sort": "DISTANCE", "radius": 5000, "categories": categories_str}
 
-        response = requests.get(url, params = param_dict, headers = header)
-        data = response.json()
+    response = requests.get(url, params = param_dict, headers = header)
+    data = response.json()
 
-        if response.status_code == 200:
-            display_locations(data["results"])
-        else:
-            print(data["message"])
+    if response.status_code == 200:
+        display_locations(data["results"])
+    else:
+        print(data["message"])
+
+    if user_id != None:
+        locations_str = ""
+        for result in data["results"]:
+            location = result["name"] + ", " + result["location"]["formatted_address"]
+            locations_str += location + "\n"
+
+        c.execute("INSERT INTO search_history (user_id, location) VALUES (?, ?)", (user_id, locations_str))
+        conn.commit()
 
 def display_locations(results):
     if len(results) == 0:
@@ -106,6 +156,10 @@ def quit_option():
         print()
         return False
 
+conn = sqlite3.connect("destination_finder.db")
+c = conn.cursor()
+create_tables()
+
 print("Destination Finder")
 print("+-+-+-+-+-+-+-+-+-\n")
 
@@ -116,17 +170,74 @@ print("Example: 12345 United States of America\n")
 time.sleep(0.65)
 
 while True:
+    
+    user_id = None
+    
+    print("1: Guest Search")
+    print("2: Login")
+    print("3: Sign Up")
+    print("Q: Quit")
 
-    query = input("Enter location: ")
+    option = input("Choose an option: ")
 
-    try:
+    if option == "1":
+        query = input("Enter location: ")
         categories_str = choose_categories()
         latitude, longitude = get_coordinates(query)
-        get_destinations(latitude, longitude, categories_str)
-        if quit_option():
-            break
-    except TypeError:
+        get_destinations(latitude, longitude, categories_str, user_id)
         if quit_option():
             break
 
+    elif option == "2":
+        
+        user_id = login()
+        if user_id != None:
+
+            while True:
+
+                print("S: Search")
+                print("H: View Search History")
+                print("R: Return to Main Menu")
+
+                sub_option = input("Choose an option: ")
+
+                if sub_option.upper() == "S":
+                    query = input("Enter location: ")
+                    categories_str = choose_categories()
+                    latitude, longitude = get_coordinates(query)
+                    get_destinations(latitude, longitude, categories_str, user_id)
+
+                elif sub_option.upper() == "H":
+                    print_search_history(user_id)
+
+                elif sub_option.upper() == "R":
+                    break
+        else:        
+            if quit_option():
+                break
+
+    elif option == "3":
+
+        while True:
+        
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+
+            c.execute("SELECT username FROM users WHERE username=?", (username,))
+            
+            if c.fetchone():
+                print("Error: username already exists - please choose a different username")
+                if quit_option():
+                    break
+            else:
+                c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+                conn.commit()
+                print("Account created successfully!")
+                break
+        
+    elif option.lower() == "q":
+        break
+    
+c.close()
+conn.close()
 print("\nThank you for using Destination Finder!")
