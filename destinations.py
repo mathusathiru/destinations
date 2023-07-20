@@ -18,6 +18,7 @@ def create_tables():
                  FOREIGN KEY (user_id) REFERENCES users (user_id)
                  )""")
 
+
 def login():
     username = input("Enter your username: ")
     password = input("Enter your password: ")
@@ -32,7 +33,8 @@ def login():
         return None
 
 def print_search_history(user_id):
-    c.execute("SELECT location, timestamp FROM search_history WHERE user_id=?", (user_id,))
+    c.execute("SELECT location, timestamp FROM search_history WHERE user_id=?",
+              (user_id,))
     search_history = c.fetchall()
 
     if not search_history:
@@ -63,7 +65,7 @@ def choose_categories():
 
     print("\nLocation Categories:")
     print("Select any number of location categories (or none) to refine your results\n")
-    
+
     for category_name, category_id in categories_dict.items():
         print(f"{category_id}: {category_name}")
     time.sleep(0.65)
@@ -121,7 +123,7 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
     header = {"accept": "application/json", "Authorization": config.key2}
     param_dict = {"ll": str(latitude) + "," + str(longitude), "sort": "DISTANCE", "radius": 5000, "categories": categories_str}
 
-    response = requests.get(url, params = param_dict, headers = header)
+    response = requests.get(url, params=param_dict, headers=header)
     data = response.json()
 
     if response.status_code == 200:
@@ -194,7 +196,7 @@ while True:
     elif option == "2":
         
         user_id = login()
-        if user_id != None:
+        if user_id is not None:
 
             while True:
 
