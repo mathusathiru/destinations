@@ -143,7 +143,9 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
     if user_id is not None:
         locations_str = ""
         for result in data["results"]:
-            location = result["name"] + ", " + result["location"]["formatted_address"]
+            location = (
+                result["name"] + ", " + result["location"]["formatted_address"]
+                )
             locations_str += location + "\n"
 
         c.execute("INSERT INTO search_history (user_id, location) VALUES (?, ?)",
