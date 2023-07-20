@@ -63,7 +63,7 @@ def choose_categories():
 
     print("\nLocation Categories:")
     print("Select any number of location categories (or none) to refine your results\n")
-
+    
     for category_name, category_id in categories_dict.items():
         print(f"{category_id}: {category_name}")
     time.sleep(0.65)
@@ -129,7 +129,7 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
     else:
         print(data["message"])
 
-    if user_id is not None:
+    if user_id != None:
         locations_str = ""
         for result in data["results"]:
             location = result["name"] + ", " + result["location"]["formatted_address"]
