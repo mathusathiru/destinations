@@ -243,7 +243,8 @@ while True:
             username = input("Enter username: ")
             password = input("Enter password: ")
 
-            c.execute("SELECT username FROM users WHERE username=?", (username,))
+            c.execute("SELECT username FROM users WHERE username=?",
+                      (username,))
 
             if c.fetchone():
                 print("Error: username already exists - use a different username")
