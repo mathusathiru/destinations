@@ -129,7 +129,7 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
     else:
         print(data["message"])
 
-    if user_id != None:
+    if user_id is not None:
         locations_str = ""
         for result in data["results"]:
             location = result["name"] + ", " + result["location"]["formatted_address"]
