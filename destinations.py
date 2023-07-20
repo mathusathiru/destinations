@@ -32,6 +32,7 @@ def login():
         print("Invalid username or password.")
         return None
 
+
 def print_search_history(user_id):
     c.execute("SELECT location, timestamp FROM search_history WHERE user_id=?",
               (user_id,))
@@ -64,7 +65,7 @@ def choose_categories():
     categories_str = ""
 
     print("\nLocation Categories:")
-    print("Select any number of location categories (or none) to refine your results\n")
+    print("Select location categories (or none) to refine your results\n")
 
     for category_name, category_id in categories_dict.items():
         print(f"{category_id}: {category_name}")
@@ -72,7 +73,7 @@ def choose_categories():
 
     while True:
         user_choice = input("\nEnter a category ID to add (or \"F\" to finish): ")
-        
+
         if user_choice.upper() == "F":
             break
         
