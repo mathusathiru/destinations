@@ -2,7 +2,12 @@ import requests
 import sqlite3
 import config
 import time
+import bcrypt
 
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
+    return hashed_password.decode("utf-8")
 
 def create_tables():
     c.execute("""CREATE TABLE IF NOT EXISTS users (
@@ -12,45 +17,146 @@ def create_tables():
                  )""")
 
     c.execute("""CREATE TABLE IF NOT EXISTS search_history (
+                 search_id INTEGER PRIMARY KEY AUTOINCREMENT,
                  user_id INTEGER NOT NULL,
-                 location TEXT NOT NULL,
+                 place_name TEXT NOT NULL,
+                 address TEXT NOT NULL,
                  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
                  FOREIGN KEY (user_id) REFERENCES users (user_id)
                  )""")
 
-
 def login():
-    username = input("Enter your username: ")
+    username = input("\nEnter your username: ")
     password = input("Enter your password: ")
-    c.execute("SELECT user_id FROM users WHERE username=? AND password=?",
-              (username, password))
-    user_id = c.fetchone()
-    if user_id:
-        print("Login successful!")
-        return user_id[0]
+
+    c.execute("SELECT user_id, password FROM users WHERE username=?", (username,))
+    user_data = c.fetchone()
+
+    if user_data and bcrypt.checkpw(password.encode("utf-8"), user_data[1].encode("utf-8")):
+        print("\nLogin successful!")
+        time.sleep(0.65)
+        return user_data[0]
     else:
-        print("Invalid username or password.")
+        print("\nError: invalid username or password")
+        time.sleep(0.65)
         return None
 
 
+
+def signup():
+
+    print()
+    
+    while True:
+        username = input("Enter username: ")
+        if len(username) < 3:
+            print("Error: username must be at least three characters\n")
+        else:
+            break
+        
+    while True:
+        password = input("Enter password: ")
+        if len(password) < 8:
+            print("Error: password must be at least eight characters\n")
+        else:
+            break
+
+    password = hash_password(password)
+    
+    return username, password
+
+
+def delete_user(user_id):
+    c.execute("SELECT username FROM users WHERE user_id=?", (user_id,))
+    username = c.fetchone()
+
+    c.execute("DELETE FROM search_history WHERE user_id=?", (user_id,))
+    c.execute("DELETE FROM users WHERE user_id=?", (user_id,))
+
+    conn.commit()
+    print("Account for", username, "has been successfully deleted")
+    time.sleep(0.65)
+
+
 def print_search_history(user_id):
-    c.execute("SELECT location, timestamp FROM search_history WHERE user_id=?",
+    c.execute("SELECT place_name, address, timestamp FROM search_history WHERE user_id=?",
               (user_id,))
     search_history = c.fetchall()
 
     if not search_history:
-        print("Search history is empty.")
+        print("\nSearch history is empty\n")
     else:
-        print("\nSearch History:")
-        for entry in search_history:
-            location, timestamp = entry
+        print("\nSearch History:\n")
+        for index, entry in enumerate(search_history):
+            place_name, address, timestamp = entry
+            print("Place Name:", place_name)
+            print("Address:", address)
             print("Timestamp:", timestamp)
-            print("Location:", location)
-            print("-" * 20)
+            if index < len(search_history) - 1:
+                print("-" * 20)
+            else:
+                print()
+    time.sleep(0.65)
 
+
+def print_most_popular_searches(user_id):
+    c.execute("SELECT place_name, address, COUNT(*) as search_count "
+              "FROM search_history "
+              "WHERE user_id=? "
+              "GROUP BY place_name, address "
+              "ORDER BY search_count DESC",
+              (user_id,))
+    popular_searches = c.fetchall()
+
+    if not popular_searches:
+        print("Search history is empty\n")
+    else:
+        print("\nMost Popular Searches:")
+        for index, entry in enumerate(popular_searches):
+            place_name, address, search_count = entry
+            print("Place Name:", place_name)
+            print("Address:", address)
+            print("Search Count:", search_count)
+            if index < len(popular_searches) - 1:
+                print("-" * 20)
+            else:
+                print()
+    time.sleep(0.65)
+    
+
+def search_history(user_id, keyword):
+    c.execute("SELECT place_name, address, timestamp "
+              "FROM search_history "
+              "WHERE user_id=? AND (place_name LIKE ? OR address LIKE ?)",
+              (user_id, f"%{keyword}%", f"%{keyword}%"))
+    search_results = c.fetchall()
+
+    if not search_results:
+        print("No matching records found\n")
+    else:
+        print("\nSearch Results:\n")
+        for index, entry in enumerate(search_results):
+            place_name, address, timestamp = entry
+            print("Place Name:", place_name)
+            print("Address:", address)
+            print("Timestamp:", timestamp)
+            if index < len(search_results) - 1:
+                print("-" * 20)
+            else:
+                print()
+    time.sleep(0.65)
+
+
+def enter_query():
+    query = input("\nEnter location: ")
+    if len(query) < 2:
+        print("\nError: query is too short (2+ characters needed)")
+        time.sleep(0.65)
+        return None
+    else:
+        return query
 
 def choose_categories():
-
     categories_dict = {
         "Arts and Entertainment": 10000,
         "Community": 12000,
@@ -60,7 +166,6 @@ def choose_categories():
         "Retail": 17000,
         "Sports": 18000,
         "Travel and Transportation": 19000,
-        "Lodging": 19009
     }
 
     categories_str = ""
@@ -96,7 +201,6 @@ def choose_categories():
 
 
 def get_coordinates(search):
-
     base_url = "https://api.opencagedata.com/geocode/v1/json"
     url = base_url + "?q=" + search + "&key=" + config.key1
 
@@ -111,19 +215,20 @@ def get_coordinates(search):
             longitude = result["geometry"]["lng"]
             return latitude, longitude
         elif data["total_results"] == 0:
-            print("Error: location not found\n-enter a valid location\n")
+            print("\nError: location not found\n-enter a valid location")
+            time.sleep(0.65)
         else:
-            print("Error: multiple locations or invalid location found\n")
+            print("\nError: multiple locations or invalid location found")
             print("-check for mispellings")
-            print("-provide a more specific location\n")
+            print("-provide a more specific location")
+            time.sleep(0.65)
     else:
-        print("Error", str(status_code) + ":", data["status"]["message"])
+        print("\nError", str(status_code) + ":", data["status"]["message"])
 
     return None
 
 
 def get_destinations(latitude, longitude, categories_str, user_id=None):
-
     url = "https://api.foursquare.com/v3/places/search"
 
     header = {"accept": "application/json", "Authorization": config.key2}
@@ -141,17 +246,16 @@ def get_destinations(latitude, longitude, categories_str, user_id=None):
         print(data["message"])
 
     if user_id is not None:
-        locations_str = ""
-        for result in data["results"]:
-            location = (
-                result["name"] + ", " + result["location"]["formatted_address"]
-                )
-            locations_str += location + "\n"
+        save_search_history(user_id, data["results"])
 
-        c.execute("INSERT INTO search_history (user_id, location) "
-                  "VALUES (?, ?)", (user_id, locations_str))
-        conn.commit()
 
+def save_search_history(user_id, results):
+    for result in results:
+        place_name = result["name"]
+        address = result["location"]["formatted_address"]
+        c.execute("INSERT INTO search_history (user_id, place_name, address) "
+                  "VALUES (?, ?, ?)", (user_id, place_name, address))
+    conn.commit()    
 
 def display_locations(results):
     if len(results) == 0:
@@ -184,78 +288,128 @@ print("+-+-+-+-+-+-+-+-+-\n")
 
 print("This destination finder shows tourist destinations in your chosen area")
 print("For best results, enter zipcode or postcode followed by country name")
-print("Example: 12345 United States of America\n")
+print("Example: 12345 United States of America")
 
 time.sleep(0.65)
 
 while True:
 
     user_id = None
+    print("\n------------------\n")
 
     print("1: Guest Search")
     print("2: Login")
     print("3: Sign Up")
     print("Q: Quit")
 
-    option = input("Choose an option: ")
+    option = input("\nChoose an option: ")
 
     if option == "1":
-        query = input("Enter location: ")
-        categories_str = choose_categories()
-        latitude, longitude = get_coordinates(query)
-        get_destinations(latitude, longitude, categories_str, user_id)
-        if quit_option():
-            break
+
+        try:
+            query = enter_query()
+            latitude, longitude = get_coordinates(query)
+            categories_str = choose_categories()
+            get_destinations(latitude, longitude, categories_str, user_id)
+        except:
+            pass
 
     elif option == "2":
 
         user_id = login()
+        
         if user_id is not None:
 
+            print()
             while True:
 
-                print("S: Search")
-                print("H: View Search History")
-                print("R: Return to Main Menu")
+                print("\n------------------\n")
 
-                sub_option = input("Choose an option: ")
+                print("1: Search")
+                print("2: View Search History")
+                print("3: Delete Account")
+                print("Q: Return to Main Menu")
 
-                if sub_option.upper() == "S":
-                    query = input("Enter location: ")
+                sub_option = input("\nChoose an option: ")
+
+                if sub_option == "1":
+                    query = enter_query()
                     categories_str = choose_categories()
                     latitude, longitude = get_coordinates(query)
                     get_destinations(
                         latitude, longitude, categories_str, user_id)
 
-                elif sub_option.upper() == "H":
-                    print_search_history(user_id)
+                elif sub_option == "2":
 
-                elif sub_option.upper() == "R":
+                    time.sleep(0.65)
+                    print("\n------------------\n")
+                    
+                    while True:
+
+                        print("1: View All Searches")
+                        print("2: View Popular Searches")
+                        print("3: Search For Record")
+                        print("Q: Return to User Menu")
+
+                        search_option = input("\nChoose an option: ")
+                        
+                        if search_option == "1":
+                            print_search_history(user_id)
+
+                        elif search_option == "2":
+                            print_most_popular_searches(user_id)
+
+                        elif search_option == "3":
+
+                            while True:
+                                keyword = input("\nEnter keyword to search: ")
+                                if len(keyword) < 2:
+                                    print("Error: enter at least 3 characters")
+                                else:
+                                    break
+                                
+                            search_history(user_id, keyword)
+
+                        elif search_option.upper() == "Q":
+                            print()
+                            time.sleep(0.65)
+                            break
+
+                        else:
+                            print("\nError: choose a valid option\n")
+                            time.sleep(0.65)
+
+                elif sub_option == "3":
+                    delete_user(user_id)
                     break
-        else:
-            if quit_option():
-                break
+
+                elif sub_option.upper() == "Q":
+                    time.sleep(0.65)
+                    break
+
+                else:
+                    print("\nError: choose a valid option\n")
+                    time.sleep(0.65)
 
     elif option == "3":
 
         while True:
 
-            username = input("Enter username: ")
-            password = input("Enter password: ")
+            username, password = signup()
 
             c.execute("SELECT username FROM users WHERE username=?",
                       (username,))
 
             if c.fetchone():
-                print("Username already exists - try another")
-                if quit_option():
-                    break
+                print("\nError: sername already exists - try another")
+                
             else:
                 c.execute("INSERT INTO users (username, password) "
                           "VALUES (?, ?)", (username, password))
 
                 conn.commit()
-                print("Account created successfully!")
+                print("\nAccount created successfully!")
+                time.sleep(0.65)
                 break
 
     elif option.lower() == "q":
