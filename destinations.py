@@ -36,7 +36,8 @@ def login():
               (username,))
     user_data = c.fetchone()
 
-    if user_data and bcrypt.checkpw(password.encode("utf-8"), user_data[1].encode("utf-8")):
+    if user_data and bcrypt.checkpw(password.encode("utf-8"),
+                                    user_data[1].encode("utf-8")):
         print("\nLogin successful!")
         time.sleep(0.65)
         return user_data[0]
@@ -56,7 +57,7 @@ def signup():
             print("Error: username must be at least three characters\n")
         else:
             break
-        
+
     while True:
         password = input("Enter password: ")
         if len(password) < 8:
@@ -158,6 +159,7 @@ def enter_query():
         return None
     else:
         return query
+
 
 def choose_categories():
     categories_dict = {
@@ -315,7 +317,7 @@ while True:
             latitude, longitude = get_coordinates(query)
             categories_str = choose_categories()
             get_destinations(latitude, longitude, categories_str, user_id)
-        except TypeError: 
+        except TypeError:
             pass
 
     elif option == "2":
