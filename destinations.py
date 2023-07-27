@@ -357,7 +357,7 @@ while True:
                         print("Q: Return to User Menu")
 
                         search_option = input("\nChoose an option: ")
-                        
+
                         if search_option == "1":
                             print_search_history(user_id)
 
@@ -372,7 +372,7 @@ while True:
                                     print("Error: enter at least 3 characters")
                                 else:
                                     break
-                                
+
                             search_history(user_id, keyword)
 
                         elif search_option.upper() == "Q":
@@ -407,7 +407,7 @@ while True:
 
             if c.fetchone():
                 print("\nError: sername already exists - try another")
-                
+
             else:
                 c.execute("INSERT INTO users (username, password) "
                           "VALUES (?, ?)", (username, password))
