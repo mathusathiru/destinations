@@ -83,7 +83,7 @@ def delete_user(user_id):
 
 def print_search_history(user_id):
     c.execute("SELECT place_name, address, timestamp FROM search_history "
-                  "WHERE user_id=?", (user_id,))
+              "WHERE user_id=?", (user_id,))
     search_history = c.fetchall()
 
     if not search_history:
@@ -125,7 +125,7 @@ def print_most_popular_searches(user_id):
             else:
                 print()
     time.sleep(0.65)
-    
+
 
 def search_history(user_id, keyword):
     c.execute("SELECT place_name, address, timestamp "
