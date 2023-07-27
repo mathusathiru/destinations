@@ -4,10 +4,12 @@ import config
 import time
 import bcrypt
 
+
 def hash_password(password):
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed_password.decode("utf-8")
+
 
 def create_tables():
     c.execute("""CREATE TABLE IF NOT EXISTS users (
@@ -25,11 +27,13 @@ def create_tables():
                  FOREIGN KEY (user_id) REFERENCES users (user_id)
                  )""")
 
+
 def login():
     username = input("\nEnter your username: ")
     password = input("Enter your password: ")
 
-    c.execute("SELECT user_id, password FROM users WHERE username=?", (username,))
+    c.execute("SELECT user_id, password FROM users WHERE username=?",
+              (username,))
     user_data = c.fetchone()
 
     if user_data and bcrypt.checkpw(password.encode("utf-8"), user_data[1].encode("utf-8")):
@@ -42,11 +46,10 @@ def login():
         return None
 
 
-
 def signup():
 
     print()
-    
+
     while True:
         username = input("Enter username: ")
         if len(username) < 3:
@@ -255,7 +258,8 @@ def save_search_history(user_id, results):
         address = result["location"]["formatted_address"]
         c.execute("INSERT INTO search_history (user_id, place_name, address) "
                   "VALUES (?, ?, ?)", (user_id, place_name, address))
-    conn.commit()    
+    conn.commit()
+
 
 def display_locations(results):
     if len(results) == 0:
@@ -311,7 +315,7 @@ while True:
             latitude, longitude = get_coordinates(query)
             categories_str = choose_categories()
             get_destinations(latitude, longitude, categories_str, user_id)
-        except:
+        except TypeError: 
             pass
 
     elif option == "2":
