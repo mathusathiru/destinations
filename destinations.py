@@ -322,7 +322,7 @@ while True:
     elif option == "2":
 
         user_id = login()
-        
+
         if user_id is not None:
 
             print()
