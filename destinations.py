@@ -348,7 +348,7 @@ while True:
 
                     time.sleep(0.65)
                     print("\n------------------\n")
-                    
+
                     while True:
 
                         print("1: View All Searches")
