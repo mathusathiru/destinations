@@ -87,7 +87,7 @@ def check_search_history(user_id):
 
     if not search_history:
         return False
-    else:   
+    else:
         return True
 
 
@@ -356,8 +356,8 @@ while True:
 
                 elif sub_option == "2":
 
-                    if check_search_history(user_id) == True:
-                        
+                    if check_search_history(user_id) is True:
+
                         time.sleep(0.65)
                         print("\n------------------\n")
 
@@ -379,13 +379,13 @@ while True:
                             elif search_option == "3":
 
                                 while True:
-                                    keyword = input("\nEnter keyword to search: ")
-                                    if len(keyword) < 2:
+                                    word = input("\nEnter keyword to search: ")
+                                    if len(word) < 2:
                                         print("Error: enter at least 3 characters")
                                     else:
                                         break
 
-                                search_history(user_id, keyword)
+                                search_history(user_id, word)
 
                             elif search_option.upper() == "Q":
                                 print()
