@@ -1,5 +1,5 @@
-import requests
 import sqlite3
+import requests
 import config
 import time
 import bcrypt
@@ -48,7 +48,6 @@ def login():
 
 
 def signup():
-
     print()
 
     while True:
@@ -79,6 +78,17 @@ def delete_user(user_id):
     conn.commit()
     print("Account for", username, "has been successfully deleted")
     time.sleep(0.65)
+
+
+def check_search_history(user_id):
+    c.execute("SELECT place_name, address, timestamp FROM search_history "
+              "WHERE user_id=?", (user_id,))
+    search_history = c.fetchall()
+
+    if not search_history:
+        return False
+    else:   
+        return True
 
 
 def print_search_history(user_id):
@@ -328,7 +338,7 @@ while True:
             print()
             while True:
 
-                print("\n------------------\n")
+                print("------------------\n")
 
                 print("1: Search")
                 print("2: View Search History")
@@ -346,43 +356,48 @@ while True:
 
                 elif sub_option == "2":
 
-                    time.sleep(0.65)
-                    print("\n------------------\n")
+                    if check_search_history(user_id) == True:
+                        
+                        time.sleep(0.65)
+                        print("\n------------------\n")
 
-                    while True:
+                        while True:
 
-                        print("1: View All Searches")
-                        print("2: View Popular Searches")
-                        print("3: Search For Record")
-                        print("Q: Return to User Menu")
+                            print("1: View All Searches")
+                            print("2: View Popular Searches")
+                            print("3: Search For Record")
+                            print("Q: Return to User Menu")
 
-                        search_option = input("\nChoose an option: ")
+                            search_option = input("\nChoose an option: ")
 
-                        if search_option == "1":
-                            print_search_history(user_id)
+                            if search_option == "1":
+                                print_search_history(user_id)
 
-                        elif search_option == "2":
-                            print_most_popular_searches(user_id)
+                            elif search_option == "2":
+                                print_most_popular_searches(user_id)
 
-                        elif search_option == "3":
+                            elif search_option == "3":
 
-                            while True:
-                                keyword = input("\nEnter keyword to search: ")
-                                if len(keyword) < 2:
-                                    print("Error: enter at least 3 characters")
-                                else:
-                                    break
+                                while True:
+                                    keyword = input("\nEnter keyword to search: ")
+                                    if len(keyword) < 2:
+                                        print("Error: enter at least 3 characters")
+                                    else:
+                                        break
 
-                            search_history(user_id, keyword)
+                                search_history(user_id, keyword)
 
-                        elif search_option.upper() == "Q":
-                            print()
-                            time.sleep(0.65)
-                            break
+                            elif search_option.upper() == "Q":
+                                print()
+                                time.sleep(0.65)
+                                break
 
-                        else:
-                            print("\nError: choose a valid option\n")
-                            time.sleep(0.65)
+                            else:
+                                print("\nError: choose a valid option")
+                                time.sleep(0.65)
+                    else:
+                        print("\nSearch history is empty\n")
+                        time.sleep(0.65)
 
                 elif sub_option == "3":
                     delete_user(user_id)
