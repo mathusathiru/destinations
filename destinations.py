@@ -381,7 +381,7 @@ while True:
                                 while True:
                                     word = input("\nEnter keyword to search: ")
                                     if len(word) < 2:
-                                        print("Error: enter at least 3 characters")
+                                        print("Error: enter 3+ characters")
                                     else:
                                         break
 
