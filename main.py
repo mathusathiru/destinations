@@ -82,7 +82,8 @@ while True:
 
                             elif search_option == "3":
                                 keyword = core_utils.get_keyword()
-                                database_utils.search_history(c, user_id, keyword)
+                                database_utils.search_history(
+                                    c, user_id, keyword)
 
                             elif search_option.upper() == "Q":
                                 print()
