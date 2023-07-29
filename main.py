@@ -1,5 +1,8 @@
-import sqlite3, time
-import core_utils, database_utils
+import sqlite3
+import time
+
+import core_utils
+import database_utils
 
 conn = sqlite3.connect("destination_finder.db")
 c = conn.cursor()
@@ -30,10 +33,7 @@ while True:
     if option == "1":
 
         try:
-            query = core_utils.enter_query()
-            latitude, longitude = core_utils.get_coordinates(query)
-            categories_str = core_utils.choose_categories()
-            core_utils.get_destinations(c, conn, latitude, longitude, categories_str, user_id)
+            core_utils.search(c, conn)
         except TypeError:
             pass
 
@@ -56,10 +56,7 @@ while True:
                 if sub_option == "1":
 
                     try:
-                        query = core_utils.enter_query()
-                        latitude, longitude = core_utils.get_coordinates(query)
-                        categories_str = core_utils.choose_categories()
-                        core_utils.get_destinations(c, conn, latitude, longitude, categories_str, user_id)
+                        core_utils.search(c, conn, user_id)
                     except TypeError:
                         pass
 
