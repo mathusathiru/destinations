@@ -8,10 +8,10 @@ conn = sqlite3.connect("destination_finder.db")
 c = conn.cursor()
 database_utils.create_tables(c)
 
-print("Destination Finder")
+print("HotelHelp")
 print("+-+-+-+-+-+-+-+-+-\n")
 
-print("This destination finder shows tourist destinations in your chosen area")
+print("HotelHelp shows local attractions for customers near your hotel")
 print("For best results, enter zipcode or postcode followed by country name")
 print("Example: 12345 United States of America")
 
