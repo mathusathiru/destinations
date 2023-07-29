@@ -77,7 +77,8 @@ while True:
                                 database_utils.print_search_history(c, user_id)
 
                             elif search_option == "2":
-                                database_utils.print_most_popular_searches(c, user_id)
+                                database_utils.print_most_popular_searches(
+                                    c, user_id)
 
                             elif search_option == "3":
                                 while True:
