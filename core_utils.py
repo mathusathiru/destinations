@@ -11,7 +11,7 @@ def search(c, conn, user_id=None):
     query = enter_query()
     latitude, longitude = get_coordinates(query)
     categories_str = choose_categories()
-    get_destinations(c, conn, latitude, longitude, categories_str, user_id)   
+    get_destinations(latitude, longitude, categories_str, c, conn, user_id)
 
 
 def hash_password(password):
@@ -110,7 +110,8 @@ def get_coordinates(search):
     return None
 
 
-def get_destinations(c, conn, latitude, longitude, categories_str, user_id=None):
+def get_destinations(latitude, longitude, categories_str,
+                     c, conn, user_id=None):
     url = "https://api.foursquare.com/v3/places/search"
     header = {"accept": "application/json", "Authorization": config.key2}
     param_dict = {"ll": str(latitude) + "," + str(longitude),
