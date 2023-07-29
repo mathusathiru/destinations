@@ -81,13 +81,8 @@ while True:
                                     c, user_id)
 
                             elif search_option == "3":
-                                while True:
-                                    word = input("\nEnter keyword to search: ")
-                                    if len(word) < 2:
-                                        print("Error: enter at least 3 characters")
-                                    else:
-                                        break
-                                database_utils.search_history(c, user_id, word)
+                                keyword = core_utils.get_keyword()
+                                database_utils.search_history(c, user_id, keyword)
 
                             elif search_option.upper() == "Q":
                                 print()
