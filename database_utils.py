@@ -1,4 +1,5 @@
-import time, bcrypt
+import time
+import bcrypt
 
 
 def create_tables(c):
@@ -87,7 +88,6 @@ def print_most_popular_searches(c, user_id):
         print("Search history is empty\n")
     else:
         print("\nMost Popular Searches:")
-        ## show top 10s and indexes
         for index, entry in enumerate(popular_searches):
             place_name, address, search_count = entry
             print("Place Name:", place_name)
