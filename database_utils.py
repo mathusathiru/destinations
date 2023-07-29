@@ -52,7 +52,7 @@ def check_search_history(c, user_id):
     search_history = c.fetchall()
     if not search_history:
         return False
-    else:   
+    else:
         return True
 
 
