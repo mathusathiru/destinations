@@ -1,6 +1,18 @@
-import time, bcrypt
+import time
+import bcrypt
 import requests
-import config, database_utils
+
+
+import config
+import database_utils
+
+
+def search(c, conn, user_id=None):
+    query = enter_query()
+    latitude, longitude = get_coordinates(query)
+    categories_str = choose_categories()
+    get_destinations(c, conn, latitude, longitude, categories_str, user_id)   
+
 
 def hash_password(password):
     salt = bcrypt.gensalt()
@@ -86,7 +98,7 @@ def get_coordinates(search):
             longitude = result["geometry"]["lng"]
             return latitude, longitude
         elif data["total_results"] == 0:
-            print("\nError: location not found\n-enter a valid location")
+            print("\nError: location not found\n-use a valid location")
             time.sleep(0.65)
         else:
             print("\nError: multiple locations or invalid location found")
@@ -127,5 +139,4 @@ def display_locations(results):
             print("Place Name:", name)
             print("Address:", address)
             if index < len(results):
-                print()  
-
+                print()
