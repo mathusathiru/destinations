@@ -141,3 +141,13 @@ def display_locations(results):
             print("Address:", address)
             if index < len(results):
                 print()
+
+
+def get_keyword():
+    while True:
+        keyword = input("\nEnter keyword to search: ")
+        if len(keyword) < 2:
+            print("Error: keyword must be at least 3 characters")
+        else:
+            break
+    return keyword
