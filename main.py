@@ -62,7 +62,7 @@ while True:
 
                 elif sub_option == "2":
 
-                    if database_utils.check_search_history(c, user_id) == True:
+                    if database_utils.check_search_history(c, user_id):
                         time.sleep(0.65)
                         print("\n------------------\n")
 
