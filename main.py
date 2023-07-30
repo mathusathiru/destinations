@@ -4,7 +4,7 @@ import time
 import core_utils
 import database_utils
 
-conn = sqlite3.connect("destination_finder.db")
+conn = sqlite3.connect("hotelhelper.db")
 c = conn.cursor()
 database_utils.create_tables(c)
 
