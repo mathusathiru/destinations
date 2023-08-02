@@ -1,27 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Home{% endblock %}
+
+{% block stylesheets %}
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>Home</title>
-</head>
+{% endblock %}
 
-<body>
-
-    <div class="header">
-        <img src="{{ url_for('static', filename='images/placeholder-logo.png') }}" alt="Logo" class="logo">
-        <div class="button-container">
-            {% if 'user_id' in session %}
-                <a href="{{ url_for('account') }}"><button class="btn-account">Account</button></a>
-            {% else %}
-                <a href="{{ url_for('register') }}"><button class="btn-signup">Sign Up</button></a>
-                <a href="{{ url_for('login_handler') }}"><button class="btn-login">Login</button></a>
-            {% endif %}
-        </div>
-    </div>
+{% block content %}
 
     <div class="index-container">
         <div class="tagline-container">
@@ -33,10 +18,8 @@
         <img src= "{{ url_for('static', filename='images/placeholder.png') }}" alt="Placeholder Image" class="main-image">
     </div>
 
-    <footer>
-        <p>© HotelHelp 2023</p>
-    </footer>
+{% endblock %}
 
-</body>
-
-</html>
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
