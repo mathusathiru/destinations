@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Home</title>
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="images/placeholder-logo.png" alt="Logo" class="logo">
+        <div class = "button-container">
+            <button class="btn-signup">Sign Up</button>
+            <button class="btn-login">Login</button>
+        </div>
+    </div>        
+
+
+    <div id="search-history-container">
+        {% if all_searches %}
+            <h2>All Search History</h2>
+            <div id="search-history">
+                {% if search_history %}
+                    <ul>
+                        {% for entry in search_history %}
+                            <li>
+                                <strong>Place Name:</strong> {{ entry['place_name'] }}<br>
+                                <strong>Address:</strong> {{ entry['address'] }}<br>
+                                <strong>Timestamp:</strong> {{ entry['timestamp'] }}<br>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No search history found.</p>
+                {% endif %}
+            </div>
+        {% else %}
+            <h2>Popular Searches</h2>
+            <div id="search-history">
+                {% if popular_searches %}
+                    <ul>
+                        {% for entry in popular_searches %}
+                            <li>
+                                <strong>Place Name:</strong> {{ entry['place_name'] }}<br>
+                                <strong>Address:</strong> {{ entry['address'] }}<br>
+                                <strong>Search Count:</strong> {{ entry['search_count'] }}<br>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No popular searches found.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>© HotelHelp 2023</p>
+    </footer>
+</body>
+
+</html>

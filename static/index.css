@@ -1,0 +1,21 @@
+@import url("base.css");
+
+.index-container {
+    padding: 75px;
+    margin-left: 200px;
+    display: flex;
+    align-items: flex-start; 
+}
+
+.tagline-container {
+    display: flex;
+    flex-direction: column;
+    margin-right: 200px; 
+    margin-top: 40px;
+    width: 300px;
+}
+
+.tagline-text {
+    margin-top: 20px;
+    margin-bottom: 35px;
+}

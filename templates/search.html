@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="search.css">
+    <title>Search</title>
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="images/placeholder-logo.png" alt="Logo" class="logo">
+        <div class = "button-container">
+            <button class="btn-signup">Sign Up</button>
+            <button class="btn-login">Login</button>
+        </div>
+    </div>
+    
+    <div class="container">
+      <form id="searchForm" method="post" action="{{ url_for('search_location') }}">
+          <div class="search-form-group">
+              <input type="text" id="search" name="search" placeholder="Enter your location...">
+              <button id="searchButton" type="submit">Search</button>
+          </div>
+          <div class="hidden-group">
+              <p id="hiddenParagraph">This is a hidden paragraph.</p>
+              <button id="hiddenButton">Results</button>
+          </div>
+          <div class="category-group">
+            <p>Location Categories:</p>
+            {{ checkboxes_html | safe }}
+          </div>
+      </form>
+    </div>
+
+    <div id="resultsContainer"></div>
+
+<script>
+
+document.getElementById('searchForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+      const form = event.target;
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+          method: 'POST',
+          body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.error) {
+              document.getElementById('hiddenParagraph').innerText = data.error;
+              document.getElementById('hiddenButton').style.display = 'block';
+          } else {
+              // Display the results on the page
+              if (data.results) {
+                  const resultsContainer = document.getElementById('resultsContainer');
+                  resultsContainer.innerHTML = ''; // Clear previous results
+
+                  const resultsList = document.createElement('ul');
+                  data.results.forEach(result => {
+                      const listItem = document.createElement('li');
+                      listItem.textContent = `Place Name: ${result.name}\nAddress: ${result.location.formatted_address}`;
+                      resultsList.appendChild(listItem);
+                  });
+
+                  resultsContainer.appendChild(resultsList);
+              }
+          }
+      })
+      .catch(error => {
+          document.getElementById('hiddenParagraph').innerText = 'An error occurred during the search.';
+          document.getElementById('hiddenButton').style.display = 'block';
+      });
+  });
+</script>
+
+
+    <footer>
+        <p>© HotelHelp 2023</p>
+    </footer>
+</body>
+
+</html>
