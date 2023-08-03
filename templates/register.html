@@ -1,24 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='register.css', _external=True) }}">
-    <script src="{{ url_for('static', filename='register.js', _external=True) }}"></script>
-    <title>Register</title>
-</head>
+{% block title %}Register{% endblock %}
 
-<body>
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='register.css', _external=True) }}">
+{% endblock %}
 
-  <div class="header">
-    <img src="images/placeholder-logo.png" alt="Logo" class="logo">
-    <div class = "button-container">
-        <button class="btn-signup">Sign Up</button>
-        <button class="btn-login">Login</button>
-    </div>
-  </div>
-
+{% block content %}
   <div class="form-container">
     <form id="register-form" method="post" action="/register.html">
       <div class="form-group">
@@ -32,14 +20,12 @@
         <input type="password" id="password" name="password">
         <div class="error-placeholder error-message" id="password-error">{{ password_error }}</div>
       </div>
-  
+
       <button type="submit">Register</button>
     </form>
   </div>
+{% endblock %}
 
-  <footer>
-    <p>© HotelHelp 2023</p>
-  </footer>
-
-</body>
-</html>
+{% block scripts %}
+  <script src="{{ url_for('static', filename='register.js', _external=True) }}"></script>
+{% endblock %}

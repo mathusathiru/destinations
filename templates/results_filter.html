@@ -1,23 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
-    <title>Home</title>
-</head>
+{% block title %}Home{% endblock %}
 
-<body>
+{% block stylesheets %}
+    <link rel="stylesheet" href="home_styles.css">
+{% endblock %}
 
-    <div class="header">
-        <img src="images/placeholder-logo.png" alt="Logo" class="logo">
-        <div class = "button-container">
-            <button class="btn-signup">Sign Up</button>
-            <button class="btn-login">Login</button>
-        </div>
-    </div>        
-
+{% block content %}
 
     <div class="search-container">
         <form action="/search_keyword" method="post">
@@ -44,12 +33,7 @@
         {% endif %}
     </div>
 
-    
-    <footer>
-        <p>© HotelHelp 2023</p>
-    </footer>
+{% endblock %}
 
-    
-</body>
-
-</html>
+{% block scripts %}
+{% endblock %}

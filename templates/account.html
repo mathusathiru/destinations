@@ -1,51 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="account.css">
-    <title>Home</title>
-</head>
+{% block title %}Account{% endblock %}
 
-<body>
+{% block stylesheets %}
+  <link rel="stylesheet" href="account.css">
+{% endblock %}
 
-    <div class="header">
-        <img src="images/placeholder-logo.png" alt="Logo" class="logo">
-        <div class = "button-container">
-            <button class="btn-signup">Sign Up</button>
-            <button class="btn-login">Login</button>
-        </div>
+{% block content %}
+
+  <div id = "user-container">
+    <div id="user-message">
+      <p>Welcome back {{ session['username'] }}!</p>
     </div>
 
-    <div id = "user-container">
-        <div id="user-message">
-          <p>Welcome back {{ session['username'] }}!</p>
-        </div>
-      
-        <div id="search-button">
-          <a href="search.html"><button>Search</button></a>
-        </div>
-      
-        <div id="history-buttons">
-          <a href="{{ url_for('show_search_history') }}"><button id="total">All Search History</button></a>
-          <a href="{{ url_for('show_popular_searches') }}"><button id="popular">Popular Searches</button></a>
-          <a href="results_filter.html"><button id="get-record">Search Past Records</button></a>
-        </div>
-      
-        <div id="user-buttons">
-          <form action="/logout" method="get">
-            <button type="submit" id="logout">Logout</button>
-          </form>
-          <form action="/delete_account" method="post">
-            <button type="submit" id="delete">Delete Account</button>
-          </form>
-        </div>
-    </div>      
+    <div id="search-button">
+      <a href="search.html"><button>Search</button></a>
+    </div>
 
-    <footer>
-        <p>© HotelHelp 2023</p>
-    </footer>
-</body>
+    <div id="history-buttons">
+      <a href="{{ url_for('show_search_history') }}"><button id="total">All Search History</button></a>
+      <a href="{{ url_for('show_popular_searches') }}"><button id="popular">Popular Searches</button></a>
+      <a href="results_filter.html"><button id="get-record">Search Past Records</button></a>
+    </div>
 
-</html>
+    <div id="user-buttons">
+      <form action="/logout" method="get">
+        <button type="submit" id="logout">Logout</button>
+      </form>
+      <form action="/delete_account" method="post">
+        <button type="submit" id="delete">Delete Account</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

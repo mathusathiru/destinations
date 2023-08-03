@@ -2,9 +2,9 @@ import requests
 import bcrypt
 import config
 
-## API Functions
+# API Functions
 
-def generate_category_checkboxes():
+def generate_checkboxes():
     categories_dict = {
         "Arts and Entertainment": 10000,
         "Community": 12000,
@@ -16,13 +16,13 @@ def generate_category_checkboxes():
         "Travel and Transportation": 19000,
     }
 
-    checkboxes_html = ''
+    checkboxes_str = ''
 
-    for category_name, category_id in categories_dict.items():
-        checkbox_html = f"<input type='checkbox' name='categories' value='{category_id}'>{category_name}<br>"
-        checkboxes_html += checkbox_html
+    for name, id in categories_dict.items():
+        checkbox_str = f"<input type='checkbox' name='categories' value='{id}'>{name}<br>"
+        checkboxes_str += checkbox_str
 
-    return checkboxes_html
+    return checkboxes_str
 
 def enter_query(query):
     if len(query) < 2:
@@ -42,8 +42,10 @@ def get_coordinates(search):
             longitude = result["geometry"]["lng"]
             return latitude, longitude, None
         elif data["total_results"] == 0:
+            print("hello")
             return None, None, "Error: Location not found. Please use a valid location."
         else:
+            print("hellooooo")
             return None, None, "Error: Multiple locations or invalid location found. Check for misspellings or provide a more specific location."
     else:
         return None, None, f"Error {status_code}: {data['status']['message']}"
@@ -66,7 +68,7 @@ def get_destinations(latitude, longitude, categories_str, c, conn, user_id):
     else:
         return f"Error: {data['message']}"
     
-## Database Functions
+# Database Functions
 
 def hash_password(password):
     salt = bcrypt.gensalt()

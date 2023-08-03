@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function() {
         errorDiv.classList.add("error-message");
         errorDiv.textContent = message;
 
-        // Append the error message to the correct error container
         if (message.includes("Username")) {
           usernameError.appendChild(errorDiv);
         } else if (message.includes("Password")) {

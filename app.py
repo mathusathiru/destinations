@@ -1,22 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g
 
 import utils
+import config
 
 import sqlite3
 import bcrypt
 
 app = Flask(__name__)
-app.secret_key = "dc79526b34c5acbab7e388cd8e034b44"
+app.secret_key = config.key3
 
 def get_db():
-    if 'db' not in g:
+    if "db" not in g:
         g.db = sqlite3.connect("hotelhelper.db")
         g.db.row_factory = sqlite3.Row 
     return g.db
 
 @app.teardown_appcontext
 def close_db(exception):
-    db = g.pop('db', None)
+    db = g.pop("db", None)
     if db is not None:
         db.close()
 
@@ -26,15 +27,15 @@ def home():
 
 @app.route("/search.html", methods=["GET"])
 def search_page():
-    generated_checkboxes = utils.generate_category_checkboxes()
-    return render_template("search.html", checkboxes_html=generated_checkboxes)
+    checkboxes = utils.generate_checkboxes()
+    return render_template("search.html", checkboxes_html=checkboxes)
 
 
 @app.route("/search", methods=["POST"])
 def search_location():
-    with app.app_context():  # Set up the application context
+    with app.app_context():
         db = get_db()
-        c = db.cursor()  # Get the cursor from the database connection
+        c = db.cursor()  
         query = request.form["search"]
         query, error_message = utils.enter_query(query)
         if not query:
@@ -78,7 +79,7 @@ def register():
                     user_id = c.fetchone()[0]
                     session["user_id"] = user_id
                     session["username"] = username
-                    return redirect(url_for("account"))  # Redirect to the account page
+                    return redirect(url_for("account"))
 
     return render_template("register.html", username_error=username_error, password_error=password_error)
 
@@ -136,8 +137,8 @@ def delete_account():
 
 @app.route("/logout")
 def logout():
-    session.clear()  # Clear the session data
-    return redirect(url_for("home"))  # Redirect to the home page after logout
+    session.clear()
+    return redirect(url_for("home"))
 
 @app.route("/search_history")
 def show_search_history():
@@ -146,7 +147,7 @@ def show_search_history():
         with app.app_context():
             db = get_db()
             c = db.cursor()
-            search_history = utils.get_search_history(c, user_id)  # Use the modified function to retrieve the history
+            search_history = utils.get_search_history(c, user_id) 
             return render_template("results_summary.html", search_history=search_history, all_searches=True)
     else:
         return redirect(url_for("login_handler"))
@@ -158,7 +159,7 @@ def show_popular_searches():
         with app.app_context():
             db = get_db()
             c = db.cursor()
-            popular_searches = utils.get_most_popular_searches(c, user_id)  # Use the modified function to retrieve popular searches
+            popular_searches = utils.get_most_popular_searches(c, user_id) 
             return render_template("results_summary.html", popular_searches=popular_searches)
     else:
         return redirect(url_for("login_handler"))
