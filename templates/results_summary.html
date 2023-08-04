@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Results{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="home_styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">    
 {% endblock %}
 
 {% block content %}

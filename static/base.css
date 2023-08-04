@@ -32,6 +32,10 @@ button {
     margin-left: 150px;
 }
 
+.btn-account {
+  margin-left: 85px;
+}
+
 footer {
     padding: 10px;
     position: fixed;

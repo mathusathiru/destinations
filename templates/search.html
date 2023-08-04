@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Search{% endblock %}
 
 {% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -16,8 +17,9 @@
                 <p id="hiddenParagraph"></p>
             </div>
             <div class="category-group">
-            <p>Location Categories:</p>
-            {{ checkboxes_html | safe }}
+                <div class="checkbox-container">
+                    {{ checkboxes_html | safe }}
+                </div>
             </div>
         </form>
     </div>

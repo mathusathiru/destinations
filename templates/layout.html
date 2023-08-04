@@ -11,7 +11,7 @@
 <body>
 
     <div class="header">
-        <img src="{{ url_for('static', filename='images/placeholder-logo.png') }}" alt="Logo" class="logo">
+        <a href="{{ url_for('home') }}"><img src="{{ image_url }}" alt="Logo" class="logo"></a>        
         <div class="button-container">
             {% if 'user_id' in session %}
                 <a href="{{ url_for('account') }}"><button class="btn-account">Account</button></a>
