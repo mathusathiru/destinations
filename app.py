@@ -21,9 +21,13 @@ def close_db(exception):
     if db is not None:
         db.close()
 
-@app.route("/")
+@app.context_processor
+def inject_image_url():
+    return {'image_url': url_for('static', filename='images/placeholder-logo.png')}
+
+@app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template('index.html')
 
 @app.route("/search.html", methods=["GET"])
 def search_page():
@@ -34,24 +38,28 @@ def search_page():
 @app.route("/search", methods=["POST"])
 def search_location():
     with app.app_context():
-        db = get_db()
-        c = db.cursor()  
-        query = request.form["search"]
-        query, error_message = utils.enter_query(query)
-        if not query:
-            return jsonify({"error": error_message})
-        
-        latitude, longitude, error_message = utils.get_coordinates(query)
-        if not latitude or not longitude:
-            return jsonify({"error": error_message})
+        try:
+            db = get_db()
+            c = db.cursor()
+            query = request.form["search"]
+            query, error_message = utils.enter_query(query)
+            if not query:
+                return jsonify({"error": error_message})
 
-        categories_str = ",".join(request.form.getlist("categories"))  
+            latitude, longitude, error_message = utils.get_coordinates(query)
+            if not latitude or not longitude:
+                return jsonify({"error": error_message})
 
-        user_id = session.get("user_id")
+            categories_str = ",".join(request.form.getlist("categories"))
 
-        results = utils.get_destinations(latitude, longitude, categories_str, c, db, user_id)
+            user_id = session.get("user_id")
 
-        return jsonify({"results": results})
+            results = utils.get_destinations(latitude, longitude, categories_str, c, db, user_id)
+
+            return jsonify({"results": results})
+
+        except Exception as e:
+            return jsonify({"error": str(e)})
 
 @app.route("/register.html", methods=["GET", "POST"])
 def register():
@@ -60,26 +68,30 @@ def register():
 
     if request.method == "POST":
         with app.app_context():
-            db = get_db()
-            c = db.cursor()
-            username = request.form.get("username")
-            password = request.form.get("password")
+            try:
+                db = get_db()
+                c = db.cursor()
+                username = request.form.get("username")
+                password = request.form.get("password")
 
-            c.execute("SELECT username FROM users WHERE username=?", (username,))
-            if c.fetchone():
-                username_error = "Username already exists - try another"
-            else:
-                if len(password) < 8:
-                    password_error = "Password must be at least eight characters"
+                c.execute("SELECT username FROM users WHERE username=?", (username,))
+                if c.fetchone():
+                    username_error = "Username already exists - try another"
                 else:
-                    hashed_password = utils.hash_password(password)
-                    c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
-                    db.commit()
-                    c.execute("SELECT user_id FROM users WHERE username=?", (username,))
-                    user_id = c.fetchone()[0]
-                    session["user_id"] = user_id
-                    session["username"] = username
-                    return redirect(url_for("account"))
+                    if len(password) < 8:
+                        password_error = "Password must be at least eight characters"
+                    else:
+                        hashed_password = utils.hash_password(password)
+                        c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
+                        db.commit()
+                        c.execute("SELECT user_id FROM users WHERE username=?", (username,))
+                        user_id = c.fetchone()[0]
+                        session["user_id"] = user_id
+                        session["username"] = username
+                        return redirect(url_for("account"))
+
+            except Exception as e:
+                return render_template("register.html", username_error="Error: " + str(e))
 
     return render_template("register.html", username_error=username_error, password_error=password_error)
 

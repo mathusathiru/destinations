@@ -4,77 +4,89 @@ import config
 
 
 def enter_query(query):
-    if len(query) < 2:
-        return None, "Error: query is too short (2+ characters needed)"
-    return query, None
+    try:
+        if len(query) < 2:
+            return None, "Error: query is too short (2+ characters needed)"
+        return query, None
+    except Exception as e:
+        return None, str(e)
 
 
 def generate_checkboxes():
-    categories_dict = {
-        "Arts and Entertainment": 10000,
-        "Community": 12000,
-        "Dining and Drinking": 13000,
-        "Events": 14000,
-        "Landmarks and Outdoors": 16000,
-        "Retail": 17000,
-        "Sports": 18000,
-        "Travel and Transportation": 19000,
-    }
+    try:
+        categories_dict = {
+            "Arts and Entertainment": 10000,
+            "Community": 12000,
+            "Dining and Drinking": 13000,
+            "Events": 14000,
+            "Landmarks and Outdoors": 16000,
+            "Retail": 17000,
+            "Sports": 18000,
+            "Travel and Transportation": 19000,
+        }
 
-    checkboxes_str = ''
+        checkboxes_str = ''
 
-    for name, id in categories_dict.items():
-        checkbox_str = f"<input type='checkbox' name='categories' value='{id}'>{name}<br>"
-        checkboxes_str += checkbox_str
+        for name, id in categories_dict.items():
+            checkbox_str = f"<input type='checkbox' name='categories' value='{id}'>{name}<br>"
+            checkboxes_str += checkbox_str
 
-    return checkboxes_str
+        return checkboxes_str
+    except Exception as e:
+        return str(e)
 
 
 def get_coordinates(search):
-    base_url = "https://api.opencagedata.com/geocode/v1/json"
-    url = base_url + "?q=" + search + "&key=" + config.key1
-    response = requests.get(url)
-    data = response.json()
-    status_code = int(data["status"]["code"])
-    if status_code == 200:
-        if data["total_results"] == 1:
-            result = data["results"][0]
-            latitude = result["geometry"]["lat"]
-            longitude = result["geometry"]["lng"]
-            return latitude, longitude, None
-        elif data["total_results"] == 0:
-            return None, None, "Error: Location not found. Please use a valid location."
+    try:
+        base_url = "https://api.opencagedata.com/geocode/v1/json"
+        url = base_url + "?q=" + search + "&key=" + config.key1
+        response = requests.get(url)
+        data = response.json()
+        status_code = int(data["status"]["code"])
+        if status_code == 200:
+            if data["total_results"] == 1:
+                result = data["results"][0]
+                latitude = result["geometry"]["lat"]
+                longitude = result["geometry"]["lng"]
+                return latitude, longitude, None
+            elif data["total_results"] == 0:
+                return None, None, "Error: Location not found. Please use a valid location."
+            else:
+                return None, None, "Error: Multiple locations or invalid location found. Check for misspellings or provide a more specific location."
         else:
-            return None, None, "Error: Multiple locations or invalid location found. Check for misspellings or provide a more specific location."
-    else:
-        return None, None, f"Error {status_code}: {data['status']['message']}"
+            return None, None, f"Error {status_code}: {data['status']['message']}"
+    except Exception as e:
+        return None, None, str(e)
 
 
 def get_destinations(latitude, longitude, categories_str, c, conn, user_id):
-    url = "https://api.foursquare.com/v3/places/search"
-    header = {"accept": "application/json", "Authorization": config.key2}
-    param_dict = {"ll": str(latitude) + "," + str(longitude),
-                  "sort": "DISTANCE",
-                  "radius": 5000,
-                  "categories": categories_str}
-    response = requests.get(url, params=param_dict, headers=header)
-    data = response.json()
+    try:
+        url = "https://api.foursquare.com/v3/places/search"
+        header = {"accept": "application/json", "Authorization": config.key2}
+        param_dict = {"ll": str(latitude) + "," + str(longitude),
+                      "sort": "DISTANCE",
+                      "radius": 5000,
+                      "categories": categories_str}
+        response = requests.get(url, params=param_dict, headers=header)
+        data = response.json()
 
-    filtered_results = []
-    if "results" in data:
-        for result in data["results"]:
-            location = result.get("location", {})
-            formatted_address = location.get("formatted_address")
-            if formatted_address is not None:
-                filtered_results.append(result)
+        filtered_results = []
+        if "results" in data:
+            for result in data["results"]:
+                location = result.get("location", {})
+                formatted_address = location.get("formatted_address")
+                if formatted_address is not None:
+                    filtered_results.append(result)
 
-    if user_id is not None:
-        save_search_history(c, conn, user_id, filtered_results)
+        if user_id is not None:
+            save_search_history(c, conn, user_id, filtered_results)
 
-    if response.status_code == 200:
-        return filtered_results
-    else:
-        return f"Error: {data['message']}"
+        if response.status_code == 200:
+            return filtered_results
+        else:
+            return f"Error: {data['message']}"
+    except Exception as e:
+        return str(e)
     
 # Database Functions
 
