@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g
+from flask import (Flask, render_template, request, redirect, 
+                   url_for, session, jsonify, g)
 
 import utils
 import config
@@ -9,10 +10,11 @@ import bcrypt
 app = Flask(__name__)
 app.secret_key = config.key3
 
+
 def get_db():
     if "db" not in g:
         g.db = sqlite3.connect("hotelhelper.db")
-        g.db.row_factory = sqlite3.Row 
+        g.db.row_factory = sqlite3.Row
     return g.db
 
 @app.teardown_appcontext
@@ -96,7 +98,6 @@ def register():
     return render_template("register.html", username_error=username_error, password_error=password_error)
 
 
-
 @app.route("/login.html", methods=["GET", "POST"])
 def login_handler():
 
@@ -127,7 +128,7 @@ def account():
         return render_template("account.html", user_id=user_id, username=username)
     else:
         return redirect(url_for("login_handler"))
-    
+
 @app.route("/delete_account", methods=["POST"])
 def delete_account():
     if "user_id" in session:
