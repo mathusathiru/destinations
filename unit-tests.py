@@ -24,20 +24,21 @@ class TestEnterQueryFunction(unittest.TestCase):
         self.assertIsNone(query)
         self.assertEqual(error, "Error: query is too short (2+ characters needed)")
 
-class TestGenerateCheckboxesFunction(unittest.TestCase):
+
+class TestGenerateCheckboxes(unittest.TestCase):
+
     def test_generate_checkboxes(self):
-        expected_output = (
-            "<input type='checkbox' name='categories' value='10000'>Arts and Entertainment<br>"
-            "<input type='checkbox' name='categories' value='12000'>Community<br>"
-            "<input type='checkbox' name='categories' value='13000'>Dining and Drinking<br>"
-            "<input type='checkbox' name='categories' value='14000'>Events<br>"
-            "<input type='checkbox' name='categories' value='16000'>Landmarks and Outdoors<br>"
-            "<input type='checkbox' name='categories' value='17000'>Retail<br>"
-            "<input type='checkbox' name='categories' value='18000'>Sports<br>"
-            "<input type='checkbox' name='categories' value='19000'>Travel and Transportation<br>"
+        checkboxes_left, checkboxes_right = generate_checkboxes()
+
+        expected_structure = (
+            '<div class="form-check">\n'
+            '    <input type="checkbox" class="form-check-input" name="categories" value="your_value" id="checkbox_your_id">\n'
+            '    <label class="form-check-label" for="checkbox_your_id">Your Label</label>\n'
+            '</div>'
         )
-        result = generate_checkboxes()
-        self.assertEqual(result, expected_output)
+
+        self.assertIn(expected_structure, checkboxes_left)
+        self.assertIn(expected_structure, checkboxes_right)
 
 class TestGetCoordinatesFunction(unittest.TestCase):
     @patch("requests.get")
