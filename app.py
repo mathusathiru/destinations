@@ -1,5 +1,4 @@
-from flask import (Flask, render_template, request, redirect, 
-                   url_for, session, jsonify, g)
+from flask import (Flask, render_template, request, redirect, url_for, session, jsonify, g)
 
 import utils
 import config
@@ -34,8 +33,7 @@ def home():
 @app.route("/search.html", methods=["GET"])
 def search_page():
     checkboxes = utils.generate_checkboxes()
-    return render_template("search.html", checkboxes_html=checkboxes)
-
+    return render_template("search.html", checkboxes=checkboxes)
 
 @app.route("/search", methods=["POST"])
 def search_location():
@@ -53,10 +51,11 @@ def search_location():
                 return jsonify({"error": error_message})
 
             categories_str = ",".join(request.form.getlist("categories"))
+            radius = int(request.form.get("radius"))
 
             user_id = session.get("user_id")
 
-            results = utils.get_destinations(latitude, longitude, categories_str, c, db, user_id)
+            results = utils.get_destinations(latitude, longitude, categories_str, radius, c, db, user_id)
 
             return jsonify({"results": results})
 
@@ -161,7 +160,7 @@ def show_search_history():
             db = get_db()
             c = db.cursor()
             search_history = utils.get_search_history(c, user_id) 
-            return render_template("results_summary.html", search_history=search_history, all_searches=True)
+            return render_template("results-summary.html", search_history=search_history, all_searches=True)
     else:
         return redirect(url_for("login_handler"))
 
@@ -173,13 +172,13 @@ def show_popular_searches():
             db = get_db()
             c = db.cursor()
             popular_searches = utils.get_most_popular_searches(c, user_id) 
-            return render_template("results_summary.html", popular_searches=popular_searches)
+            return render_template("results-summary.html", popular_searches=popular_searches)
     else:
         return redirect(url_for("login_handler"))
 
-@app.route("/results_filter.html", methods=["GET"])
+@app.route("/results-filter.html", methods=["GET"])
 def results_filter_page():
-    return render_template("results_filter.html")
+    return render_template("results-filter.html")
 
 @app.route("/search_keyword", methods=["POST"])
 def search_keyword():
@@ -188,14 +187,14 @@ def search_keyword():
         c = db.cursor()
         keyword = request.form["keyword"]
         
-        if len(keyword) < 3:
-            error_message = "Keyword must be at least 3 characters."
-            return render_template("results_filter.html", error_message=error_message)
+        if len(keyword) < 2:
+            error_message = "Keyword must be at least 2 characters."
+            return render_template("results-filter.html", error_message=error_message)
 
         user_id = session.get("user_id")
         search_results = utils.search_history(c, user_id, keyword)
 
-        return render_template("results_filter.html", search_results=search_results, keyword=keyword)
+        return render_template("results-filter.html", search_results=search_results, keyword=keyword)
 
 
 if __name__ == "__main__":
