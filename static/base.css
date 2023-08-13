@@ -4,16 +4,16 @@
     box-sizing: border-box;
 }
 
-.header {
+#header {
     display: flex;
     padding: 50px;
   }
   
-.header .logo {
+#header #logo {
     margin-left: 50px;
   }
   
-.header .button-container {
+#header #button-container {
   display: flex;
   align-items: center;
   margin-left: 750px;
@@ -28,11 +28,11 @@ button {
     cursor: pointer;
 }
 
-.btn-login {
+#btn-login {
     margin-left: 150px;
 }
 
-.btn-account {
+#btn-account {
   margin-left: 85px;
 }
 
