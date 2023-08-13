@@ -64,37 +64,30 @@ def search_location():
 
 @app.route("/register.html", methods=["GET", "POST"])
 def register():
+
     username_error = ""
-    password_error = ""
 
     if request.method == "POST":
         with app.app_context():
-            try:
-                db = get_db()
-                c = db.cursor()
-                username = request.form.get("username")
-                password = request.form.get("password")
+            db = get_db()
+            c = db.cursor()
+            username = request.form.get("username")
+            password = request.form.get("password")
 
-                c.execute("SELECT username FROM users WHERE username=?", (username,))
-                if c.fetchone():
-                    username_error = "Username already exists - try another"
-                else:
-                    if len(password) < 8:
-                        password_error = "Password must be at least eight characters"
-                    else:
-                        hashed_password = utils.hash_password(password)
-                        c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
-                        db.commit()
-                        c.execute("SELECT user_id FROM users WHERE username=?", (username,))
-                        user_id = c.fetchone()[0]
-                        session["user_id"] = user_id
-                        session["username"] = username
-                        return redirect(url_for("account"))
+            c.execute("SELECT username FROM users WHERE username=?", (username,))
+            if c.fetchone():
+                username_error = "Username already exists - try another"
+            else:
+                hashed_password = utils.hash_password(password)
+                c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
+                db.commit()
+                c.execute("SELECT user_id FROM users WHERE username=?", (username,))
+                user_id = c.fetchone()[0]
+                session["user_id"] = user_id
+                session["username"] = username
+                return redirect(url_for("account"))
 
-            except Exception as e:
-                return render_template("register.html", username_error="Error: " + str(e))
-
-    return render_template("register.html", username_error=username_error, password_error=password_error)
+    return render_template("register.html", username_error=username_error)
 
 
 @app.route("/login.html", methods=["GET", "POST"])
