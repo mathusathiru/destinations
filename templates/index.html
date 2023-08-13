@@ -8,14 +8,14 @@
 
 {% block content %}
 
-    <div class="index-container">
-        <div class="tagline-container">
-            <h1 class="tagline">Tagline</h1>
-            <p class="tagline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+    <div id="index-container">
+        <div id="tagline-container">
+            <h1 id="tagline">Tagline</h1>
+            <p id="tagline-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-            <a href="search.html"><button class="btn-search">Search</button></a>  
+            <a href="search.html"><button id="btn-search">Search</button></a>  
         </div>
-        <img src= "{{ url_for('static', filename='images/placeholder.png') }}" alt="Placeholder Image" class="main-image">
+        <img src= "{{ url_for('static', filename='images/placeholder.png') }}" alt="Placeholder Image" id="main-image">
     </div>
 
 {% endblock %}
