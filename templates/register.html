@@ -3,27 +3,38 @@
 {% block title %}Register{% endblock %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='user.css') }}">
 {% endblock %}
 
 {% block content %}
-  <div class="form-container">
-    <form id="register-form" method="post" action="/register.html">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username">
-        <div class="error-placeholder error-message" id="username-error">{{ username_error }}</div>
-      </div>
-      
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password">
-        <div class="error-placeholder error-message" id="password-error">{{ password_error }}</div>
-      </div>
+<div class="form-container">
+  <form id="register-form" method="post" action="/register.html" class="grid-container">
 
-      <button type="submit">Register</button>
-    </form>
-  </div>
+    <div class="form-group grid-item" id="register-username">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+      <div class="error-message" id="username-error">
+        {% if username_error %}
+          {{ username_error }}
+        {% else %}
+          <span class="no-error">No username error</span>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="form-group grid-item" id="register-password">
+      <label for="password" id="password-label">Password</label>
+      <input type="password" id="password" name="password" required>
+      <div class="error-message" id="password-error">
+          <span class="no-error">No password error</span>
+      </div>
+    </div>
+
+    <div class="grid-item">
+      <button type="submit" id="register-button">Register</button>
+    </div>
+  </form>
+</div>
 {% endblock %}
 
 {% block scripts %}

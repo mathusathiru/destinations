@@ -3,31 +3,36 @@
 {% block title %}Login{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">    
+  <link rel="stylesheet" href="{{ url_for('static', filename='user.css') }}">
 {% endblock %}
 
 {% block content %}
-    <div class="form-container">
-        <form id="login-form" action="/login.html" method="post">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-                <div class="error-placeholder error-message" id="username-error"></div>
-            </div>
+<div class="form-container">
+  <form id="login-form" method="post" action="/login.html" class="grid-container">
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-                <div class="error-placeholder error-message" id="password-error"></div>
-            </div>
-
-            <div class="error-placeholder error-message" id="error-message">
-                {% if error_message %}
-                    {{ error_message }}
-                {% endif %}
-            </div>
-
-            <button type="submit">Login</button>
-        </form>
+    <div class="form-group grid-item" id = "login-username">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
     </div>
+    
+    <div class="form-group grid-item">
+      <label for="password" id="password-label">Password</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+
+    <div class="grid-item">
+    {% if error_message %}
+        <div class="error-message" id="login-error">
+        {{ error_message }}
+        </div>
+    {% else %}
+        <div class="no-error" id="login-error">
+        No error
+        </div>
+    {% endif %}
+    <button type="submit" id="login-button">Login</button>
+    </div>
+
+  </form>
+</div>
 {% endblock %}
