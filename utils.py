@@ -25,13 +25,23 @@ def generate_checkboxes():
             "Travel and Transportation": 19000,
         }
 
-        checkboxes_str = ''
+        checkboxes = ""
+
+        counter = 0
 
         for name, id in categories_dict.items():
-            checkbox_str = f"<input type='checkbox' name='categories' value='{id}'>{name}<br>"
-            checkboxes_str += checkbox_str
+            checkbox_str = f'<div class="form-check">'
+            checkbox_str += f'<input type="checkbox" class="form-check-input" name="categories" value="{id}" id="checkbox_{counter}">'
+            checkbox_str += f'<label class="form-check-label" for="checkbox_{counter}">{name}</label>'
+            checkbox_str += '</div>'
 
-        return checkboxes_str
+
+            checkboxes += checkbox_str
+
+            counter += 1
+
+        return checkboxes
+
     except Exception as e:
         return str(e)
 
@@ -50,22 +60,22 @@ def get_coordinates(search):
                 longitude = result["geometry"]["lng"]
                 return latitude, longitude, None
             elif data["total_results"] == 0:
-                return None, None, "Error: Location not found. Please use a valid location."
+                return None, None, "Error: location not found - please use a valid location"
             else:
-                return None, None, "Error: Multiple locations or invalid location found. Check for misspellings or provide a more specific location."
+                return None, None, "Error: multiple locations or invalid location found - check for misspellings or provide a more specific location"
         else:
             return None, None, f"Error {status_code}: {data['status']['message']}"
     except Exception as e:
         return None, None, str(e)
 
 
-def get_destinations(latitude, longitude, categories_str, c, conn, user_id):
+def get_destinations(latitude, longitude, categories_str, radius, c, conn, user_id):
     try:
         url = "https://api.foursquare.com/v3/places/search"
         header = {"accept": "application/json", "Authorization": config.key2}
         param_dict = {"ll": str(latitude) + "," + str(longitude),
                       "sort": "DISTANCE",
-                      "radius": 5000,
+                      "radius": radius,
                       "categories": categories_str}
         response = requests.get(url, params=param_dict, headers=header)
         data = response.json()
