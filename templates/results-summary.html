@@ -8,43 +8,69 @@
 
 {% block content %}
 
-    <div id="search-history-container">
-        {% if all_searches %}
+    {% if all_searches and request.path != '/search_keyword' %}
+        <div id="search-history-container">
             <h2>All Search History</h2>
             <div id="search-history">
                 {% if search_history %}
                     <ul>
                         {% for entry in search_history %}
                             <li>
-                                <strong>Place Name:</strong> {{ entry['place_name'] }}<br>
-                                <strong>Address:</strong> {{ entry['address'] }}<br>
-                                <strong>Timestamp:</strong> {{ entry['timestamp'] }}<br>
+                                <strong>{{ entry['place_name'] }} </strong>({{ entry['timestamp'] }})<br>
+                                {{ entry['address'] }}<br>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>No search history found.</p>
+                    <p>Search history is empty</p>
                 {% endif %}
             </div>
-        {% else %}
+        </div>
+
+    {% elif not all_searches and request.path != '/search_keyword' %}
+        <div id="search-history-container">
             <h2>Popular Searches</h2>
             <div id="search-history">
                 {% if popular_searches %}
                     <ul>
                         {% for entry in popular_searches %}
                             <li>
-                                <strong>Place Name:</strong> {{ entry['place_name'] }}<br>
-                                <strong>Address:</strong> {{ entry['address'] }}<br>
-                                <strong>Search Count:</strong> {{ entry['search_count'] }}<br>
+                                <strong>{{ entry['place_name'] }}: </strong>{{ entry['address'] }}<br>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>No popular searches found.</p>
+                    <p>Search history is empty</p>
                 {% endif %}
             </div>
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
+
+    {% if show_search_form %}
+        <div class="search-container">
+            <form action="/search_keyword" method="post">
+                <input type="text" id="search-input" name="keyword" placeholder="Enter your search...">
+                <button id="search-button">Search</button>
+            </form>
+            {% if error_message %}
+                <p class="error">{{ error_message }}</p>
+            {% endif %}
+            {% if search_results %}
+                <div class="search-results">
+                    <h2>Search Results for "{{ keyword }}"</h2>
+                    <ul>
+                        {% for result in search_results %}
+                            <li>Place Name: {{ result["place_name"] }}</li>
+                            <li>Address: {{ result["address"] }}</li>
+                            <li>Timestamp: {{ result["timestamp"] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% elif keyword and not error_message %}
+                <p>No matching records found.</p>
+            {% endif %}
+        </div>
+    {% endif %}
 
 {% endblock %}
 
