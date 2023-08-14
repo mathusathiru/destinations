@@ -2,13 +2,12 @@
 
 .container {
     margin-left: 250px;
+    width: 1000px;
 }
 
-/* results.css */
-
-/* Pagination styles */
 .pagination {
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 50px;
 }
 
 .page-button {
@@ -62,7 +61,7 @@ ul {
     margin: 10px 0;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
-    width: 750px; /* Set a fixed width for the cards */
+    width: 750px;
 }
 
 .search-result-card:hover {
@@ -79,3 +78,9 @@ h4 {
     margin-top: 30px;
     margin-bottom: 20px;
 }
+
+.search-container {
+    min-height: calc(64.5vh - 50px); /* Subtract footer height */
+    position: relative; /* Required for absolute positioning of footer */
+}
+
