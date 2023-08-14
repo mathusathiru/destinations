@@ -20,7 +20,7 @@
     <div id="history-buttons">
       <a href="{{ url_for('show_search_history') }}"><button id="total">All Search History</button></a>
       <a href="{{ url_for('show_popular_searches') }}"><button id="popular">Popular Searches</button></a>
-      <a href="results_filter.html"><button id="get-record">Search Past Records</button></a>
+      <a href="{{ url_for('search_keyword') }}"><button id="get-record">Search Past Records</button></a>
     </div>
 
     <div id="user-buttons">
