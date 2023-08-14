@@ -33,7 +33,8 @@ def home():
 @app.route("/search.html", methods=["GET"])
 def search_page():
     checkboxes = utils.generate_checkboxes()
-    return render_template("search.html", checkboxes=checkboxes)
+    radius_buttons = utils.generate_radio_buttons()
+    return render_template("search.html", checkboxes=checkboxes, radius_buttons=radius_buttons)
 
 @app.route("/search", methods=["POST"])
 def search_location():
