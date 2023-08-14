@@ -1,7 +1,14 @@
 @import url("base.css");
 
+@import url("base.css");
+
+.content-container {
+    min-height: calc(64.5vh - 50px);
+    position: relative;
+}
+
 #index-container {
-    padding: 75px;
+    padding: 70px;
     margin-left: 200px;
     display: flex;
     align-items: flex-start; 
@@ -11,11 +18,10 @@
     display: flex;
     flex-direction: column;
     margin-right: 200px; 
-    margin-top: 40px;
+    margin-top: 20px;
     width: 300px;
 }
 
 #tagline-text {
-    margin-top: 20px;
-    margin-bottom: 35px;
+    margin-top: 10px;
 }

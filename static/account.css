@@ -1,25 +1,36 @@
 @import url("base.css");
 
+body, .site-footer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 #user-container {
     width: 750px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: 50px auto;
+    flex-grow: 1;
 }
 
 #user-container div {
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 #user-container button {
-    width: 100%; 
-  }
-  
-  #history-buttons,
-  #user-buttons {
+    width: 100%;
+}
+
+#user-message p {
+  text-align: center;
+}
+
+#user-message {
+  height: 25px;
+}
+
+#history-buttons,
+#user-buttons {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     grid-gap: 20px;
-  }
-  
+}
