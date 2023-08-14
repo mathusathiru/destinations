@@ -154,7 +154,7 @@ def show_search_history():
             db = get_db()
             c = db.cursor()
             search_history = utils.get_search_history(c, user_id) 
-            return render_template("results-summary.html", search_history=search_history, all_searches=True)
+            return render_template("results.html", search_history=search_history, all_searches=True)
     else:
         return redirect(url_for("login_handler"))
 
@@ -166,7 +166,7 @@ def show_popular_searches():
             db = get_db()
             c = db.cursor()
             popular_searches = utils.get_most_popular_searches(c, user_id) 
-            return render_template("results-summary.html", popular_searches=popular_searches)
+            return render_template("results.html", popular_searches=popular_searches)
     else:
         return redirect(url_for("login_handler"))
 
@@ -176,7 +176,7 @@ def search_keyword():
         keyword = request.form["keyword"]
         if len(keyword) < 2:
             error_message = "Keyword must be at least 2 characters."
-            return render_template("results-summary.html", show_search_form=True, error_message=error_message)
+            return render_template("results.html", show_search_form=True, error_message=error_message)
 
         user_id = session.get("user_id")
 
@@ -185,9 +185,9 @@ def search_keyword():
             c = db.cursor()
             search_results = utils.search_history(c, user_id, keyword)
 
-        return render_template("results-summary.html", show_search_form=True, search_results=search_results, keyword=keyword)
+        return render_template("results.html", show_search_form=True, search_results=search_results, keyword=keyword)
 
-    return render_template("results-summary.html", show_search_form=True)
+    return render_template("results.html", show_search_form=True)
 
 
 if __name__ == "__main__":
