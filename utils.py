@@ -13,37 +13,50 @@ def enter_query(query):
 
 
 def generate_checkboxes():
-    try:
-        categories_dict = {
-            "Arts and Entertainment": 10000,
-            "Community": 12000,
-            "Dining and Drinking": 13000,
-            "Events": 14000,
-            "Landmarks and Outdoors": 16000,
-            "Retail": 17000,
-            "Sports": 18000,
-            "Travel and Transportation": 19000,
-        }
+    categories_dict = {
+        "Arts and Entertainment": 10000,
+        "Community": 12000,
+        "Dining and Drinking": 13000,
+        "Events": 14000,
+        "Landmarks and Outdoors": 16000,
+        "Retail": 17000,
+        "Sports": 18000,
+        "Travel and Transportation": 19000,
+    }
 
-        checkboxes = ""
+    checkboxes = ""
 
-        counter = 0
+    counter = 0
 
-        for name, id in categories_dict.items():
-            checkbox_str = f'<div class="form-check">'
-            checkbox_str += f'<input type="checkbox" class="form-check-input" name="categories" value="{id}" id="checkbox_{counter}">'
-            checkbox_str += f'<label class="form-check-label" for="checkbox_{counter}">{name}</label>'
-            checkbox_str += '</div>'
+    for name, id in categories_dict.items():
+        checkbox_str = f'<div class="form-check">'
+        checkbox_str += f'<input type="checkbox" class="form-check-input" name="categories" value="{id}" id="checkbox_{counter}">'
+        checkbox_str += f'<label class="form-check-label" for="checkbox_{counter}">{name}</label>'
+        checkbox_str += '</div>'
 
 
-            checkboxes += checkbox_str
+        checkboxes += checkbox_str
 
-            counter += 1
+        counter += 1
 
-        return checkboxes
+    return checkboxes
 
-    except Exception as e:
-        return str(e)
+def generate_radio_buttons():
+    values = [500, 1000, 2500, 5000, 10000]
+
+    radius_buttons = ""
+
+    for value in values:
+        button_str = f'<div class="form-group">'
+        button_str += f'<div class="form-check">'
+        button_str += f'<input class="form-check-input" type="radio" name="radius" value="{value}" id="radius-{value}">'
+        button_str += f'<label class="form-check-label" for="radius-{value}">{value}</label>'
+        button_str += '</div>'
+        button_str += '</div>'
+
+        radius_buttons += button_str
+
+    return radius_buttons
 
 
 def get_coordinates(search):
