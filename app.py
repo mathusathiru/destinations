@@ -170,25 +170,24 @@ def show_popular_searches():
     else:
         return redirect(url_for("login_handler"))
 
-@app.route("/results-filter.html", methods=["GET"])
-def results_filter_page():
-    return render_template("results-filter.html")
-
-@app.route("/search_keyword", methods=["POST"])
+@app.route("/search_keyword", methods=["GET", "POST"])
 def search_keyword():
-    with app.app_context():
-        db = get_db()
-        c = db.cursor()
+    if request.method == "POST":
         keyword = request.form["keyword"]
-        
         if len(keyword) < 2:
             error_message = "Keyword must be at least 2 characters."
-            return render_template("results-filter.html", error_message=error_message)
+            return render_template("results-summary.html", show_search_form=True, error_message=error_message)
 
         user_id = session.get("user_id")
-        search_results = utils.search_history(c, user_id, keyword)
 
-        return render_template("results-filter.html", search_results=search_results, keyword=keyword)
+        with app.app_context():
+            db = get_db()
+            c = db.cursor()
+            search_results = utils.search_history(c, user_id, keyword)
+
+        return render_template("results-summary.html", show_search_form=True, search_results=search_results, keyword=keyword)
+
+    return render_template("results-summary.html", show_search_form=True)
 
 
 if __name__ == "__main__":
