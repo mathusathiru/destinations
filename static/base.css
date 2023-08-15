@@ -5,18 +5,29 @@
 }
 
 #header {
-    display: flex;
-    padding: 50px;
-  }
-  
-#header #logo {
-    margin-left: 50px;
-  }
-  
-#header #button-container {
   display: flex;
   align-items: center;
-  margin-left: 750px;
+  padding: 50px;
+}
+
+#header #logo {
+  margin-left: 50px;
+}
+
+#menu-buttons {
+  margin-left: 825px;
+  display: flex;
+  align-items: center; 
+}
+
+#menu-buttons .btn.btn-primary {
+  margin: 5px 50px 5px 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 button {
@@ -26,14 +37,7 @@ button {
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-}
-
-#btn-login {
-    margin-left: 140px;
-}
-
-#btn-account {
-  margin-left: 215px;
+    text-decoration: none;
 }
 
 footer {
