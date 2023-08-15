@@ -35,7 +35,7 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        <p>Search history is empty</p>
+                        <p class = "empty-message">Search history is empty</p>
                     {% endif %}
                 </div>
             </div>
@@ -53,10 +53,10 @@
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p>Search history is empty</p>
+                        <p class = "empty-message">Search history is empty</p>
                     {% endif %}
                 </div>
-            </div>
+            </div>        
         {% endif %}
 
         {% if show_search_form %}
