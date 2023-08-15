@@ -278,7 +278,7 @@ class TestGetMostPopularSearches(unittest.TestCase):
 class TestSearchKeyword(unittest.TestCase):
 
     def setUp(self):
-        self.conn = sqlite3.connect(':memory:') 
+        self.conn = sqlite3.connect(':memory:')
         self.c = self.conn.cursor()
         create_tables(self.c)
 

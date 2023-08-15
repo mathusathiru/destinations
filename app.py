@@ -16,19 +16,23 @@ db.init_app(app)
 def close_db(exception):
     db.session.remove()
 
+
 @app.context_processor
 def inject_image_url():
     return {'image_url': url_for('static', filename='images/logo.png')}
 
+
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route("/search.html", methods=["GET"])
 def search_page():
     checkboxes = utils.generate_checkboxes()
     radius_buttons = utils.generate_radio_buttons()
     return render_template("search.html", checkboxes=checkboxes, radius_buttons=radius_buttons)
+
 
 @app.route("/search", methods=["POST"])
 def search_location():
@@ -55,6 +59,7 @@ def search_location():
         print("Error:", e)
         return jsonify({"error": str(e)})
 
+
 @app.route("/register.html", methods=["GET", "POST"])
 def register():
     username_error = ""
@@ -79,6 +84,7 @@ def register():
 
     return render_template("register.html", username_error=username_error)
 
+
 @app.route("/login.html", methods=["GET", "POST"])
 def login_handler():
     if request.method == "POST":
@@ -99,6 +105,7 @@ def login_handler():
     
     return render_template("login.html")
 
+
 @app.route("/account.html")
 def account():
     if "user_id" in session and "username" in session:
@@ -108,10 +115,12 @@ def account():
     else:
         return redirect(url_for("login_handler"))
 
+
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("home"))
+
 
 @app.route("/search_keyword", methods=["GET", "POST"])
 def search_keyword():
@@ -135,6 +144,7 @@ def search_keyword():
     
     return render_template("results.html", show_search_form=True)
 
+
 @app.route("/delete_account", methods=["POST"])
 def delete_account():
     if "user_id" in session:
@@ -155,6 +165,7 @@ def delete_account():
     
     return redirect(url_for("home"))
 
+
 @app.route("/search_history")
 def show_search_history():
     if "user_id" in session:
@@ -166,6 +177,7 @@ def show_search_history():
             return render_template("results.html", error_message=str(e))
     else:
         return redirect(url_for("login_handler"))
+
 
 @app.route("/popular_searches")
 def show_popular_searches():
