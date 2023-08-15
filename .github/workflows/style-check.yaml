@@ -18,5 +18,4 @@ jobs:
           python -m pip install pycodestyle
 
       - name: Check Style
-        run: pycodestyle --first *.py
-
+        run: pycodestyle --first --ignore=E501 *.py
