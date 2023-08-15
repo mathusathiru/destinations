@@ -17,7 +17,7 @@ def close_db(exception):
 
 @app.context_processor
 def inject_image_url():
-    return {'image_url': url_for('static', filename='images/placeholder-logo.png')}
+    return {'image_url': url_for('static', filename='images/logo.png')}
 
 @app.route('/')
 def home():
