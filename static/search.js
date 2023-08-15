@@ -42,9 +42,17 @@ document.getElementById("search-form").addEventListener('submit', async function
                 }).addTo(map);
 
                 data.results.forEach(result => {
-                    const marker = L.marker([result.geocodes.main.latitude, result.geocodes.main.longitude]).addTo(map);
+                    const customIcon = L.icon({
+                        iconUrl: '/static/images/marker.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                    });
+                
+                    const marker = L.marker([result.geocodes.main.latitude, result.geocodes.main.longitude], { icon: customIcon }).addTo(map);
                     marker.bindPopup(`<b>${result.name}</b><br>${result.location.formatted_address}`);
                 });
+                         
 
             }
         } catch (error) {

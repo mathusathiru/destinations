@@ -17,11 +17,11 @@ document.addEventListener("DOMContentLoaded", function() {
     let errorMessages = [];
 
     if (username.length < 3) {
-      errorMessages.push("Username (min. 3 characters)");
+      errorMessages.push("Username too short (min. 3 characters)");
     }
 
     if (password.length < 8) {
-      errorMessages.push("Password (min. 8 characters)");
+      errorMessages.push("Password too short (min. 8 characters)");
     }
 
     for (const message of errorMessages) {
