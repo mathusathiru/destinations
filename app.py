@@ -1,26 +1,18 @@
-from flask import (Flask, render_template, request, redirect, url_for, session, jsonify, g)
-
-import utils
-import config
-
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from database import User, SearchHistory, db
+from sqlalchemy import func, desc
 import bcrypt
+import config
+import utils
 
 app = Flask(__name__)
 app.secret_key = config.key3
-
-
-def get_db():
-    if "db" not in g:
-        g.db = sqlite3.connect("hotelhelper.db")
-        g.db.row_factory = sqlite3.Row
-    return g.db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotelhelper.db'
+db.init_app(app)
 
 @app.teardown_appcontext
 def close_db(exception):
-    db = g.pop("db", None)
-    if db is not None:
-        db.close()
+    db.session.remove()
 
 @app.context_processor
 def inject_image_url():
@@ -38,79 +30,79 @@ def search_page():
 
 @app.route("/search", methods=["POST"])
 def search_location():
-    with app.app_context():
-        try:
-            db = get_db()
-            c = db.cursor()
-            query = request.form["search"]
-            query, error_message = utils.enter_query(query)
-            if not query:
-                return jsonify({"error": error_message})
+    try:
+        query = request.form["search"]
+        query, error_message = utils.enter_query(query)
+        if not query:
+            return jsonify({"error": error_message})
 
-            latitude, longitude, error_message = utils.get_coordinates(query)
-            if not latitude or not longitude:
-                return jsonify({"error": error_message})
+        latitude, longitude, error_message = utils.get_coordinates(query)
+        if not latitude or not longitude:
+            return jsonify({"error": error_message})
 
-            categories_str = ",".join(request.form.getlist("categories"))
-            radius = int(request.form.get("radius"))
+        categories_str = ",".join(request.form.getlist("categories"))
+        radius = int(request.form.get("radius"))
 
-            user_id = session.get("user_id")
+        user_id = session.get("user_id")
 
-            results = utils.get_destinations(latitude, longitude, categories_str, radius, c, db, user_id)
+        print(f"Query: {query}")
+        print(f"Latitude: {latitude}, Longitude: {longitude}")
+        print(f"Categories: {categories_str}")
+        print(f"Radius: {radius}")
+        print(f"User ID: {user_id}")
 
-            return jsonify({"results": results})
+        results = utils.get_destinations(latitude, longitude, categories_str, radius, user_id, db.session)
 
-        except Exception as e:
-            return jsonify({"error": str(e)})
+        print("Results:", results)
 
+        return jsonify({"results": results})
+
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({"error": str(e)})
+    
 @app.route("/register.html", methods=["GET", "POST"])
 def register():
-
     username_error = ""
-
+    
     if request.method == "POST":
-        with app.app_context():
-            db = get_db()
-            c = db.cursor()
-            username = request.form.get("username")
-            password = request.form.get("password")
+        username = request.form.get("username")
+        password = request.form.get("password")
 
-            c.execute("SELECT username FROM users WHERE username=?", (username,))
-            if c.fetchone():
-                username_error = "Username already exists - try another"
-            else:
-                hashed_password = utils.hash_password(password)
-                c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
-                db.commit()
-                c.execute("SELECT user_id FROM users WHERE username=?", (username,))
-                user_id = c.fetchone()[0]
-                session["user_id"] = user_id
-                session["username"] = username
-                return redirect(url_for("account"))
+        existing_user = db.session.query(User).filter_by(username=username).first()
+        if existing_user:
+            username_error = "Username already exists - try another"
+        else:
+            hashed_password = utils.hash_password(password)
+            new_user = User(username=username, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+
+            user_id = new_user.user_id
+            session["user_id"] = user_id
+            session["username"] = username
+            return redirect(url_for("account"))
 
     return render_template("register.html", username_error=username_error)
 
-
 @app.route("/login.html", methods=["GET", "POST"])
 def login_handler():
-
     if request.method == "POST":
-        with app.app_context():
-            db = get_db()
-            c = db.cursor()
+        try:
             username = request.form.get("username")
             password = request.form.get("password")
-
-            c.execute("SELECT user_id, username, password FROM users WHERE username=?", (username,))
-            user_data = c.fetchone()
-            if user_data and bcrypt.checkpw(password.encode("utf-8"), user_data[2].encode("utf-8")):
-                session["user_id"] = user_data[0]
-                session["username"] = user_data[1]
+    
+            user = User.query.filter_by(username=username).first()
+            if user and bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8")):
+                session["user_id"] = user.user_id
+                session["username"] = user.username
                 return redirect(url_for("account"))
             else:
                 error_message = "Invalid username or password"
                 return render_template("login.html", error_message=error_message)
-
+        except Exception as e:
+            return render_template("login.html", error_message=str(e))
+    
     return render_template("login.html")
 
 @app.route("/account.html")
@@ -122,79 +114,87 @@ def account():
     else:
         return redirect(url_for("login_handler"))
 
-@app.route("/delete_account", methods=["POST"])
-def delete_account():
-    if "user_id" in session:
-        with app.app_context(): 
-            db = get_db()
-            c = db.cursor()
-            user_id = session["user_id"]
-
-            c.execute("SELECT username FROM users WHERE user_id=?", (user_id,))
-            username = c.fetchone()
-
-            if username:
-                c.execute("DELETE FROM search_history WHERE user_id=?", (user_id,))
-                c.execute("DELETE FROM users WHERE user_id=?", (user_id,))
-                db.commit()
-                session.clear()
-                return redirect(url_for("home"))
-    return redirect(url_for("home"))
-
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("home"))
 
+@app.route("/search_keyword", methods=["GET", "POST"])
+def search_keyword():
+    if request.method == "POST":
+        try:
+            keyword = request.form["keyword"]
+            if len(keyword) < 2:
+                error_message = "Keyword must be at least 2 characters."
+                return render_template("results.html", show_search_form=True, error_message=error_message)
+    
+            user_id = session.get("user_id")
+    
+            if user_id is None:
+                return redirect(url_for("login_handler"))
+    
+            search_results = utils.search_history(db.session, user_id, keyword)
+    
+            return render_template("results.html", show_search_form=True, search_results=search_results, keyword=keyword)
+        except Exception as e:
+            return render_template("results.html", show_search_form=True, error_message=str(e))
+    
+    return render_template("results.html", show_search_form=True)
+
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    if "user_id" in session:
+        try:
+            user_id = session["user_id"]
+            user = User.query.get(user_id)
+    
+            if user:
+                SearchHistory.query.filter_by(user_id=user_id).delete()
+    
+                db.session.delete(user)
+                db.session.commit()
+    
+                session.clear()
+                return redirect(url_for("home"))
+        except Exception as e:
+            return render_template("index.html", error_message=str(e))
+    
+    return redirect(url_for("home"))
+
 @app.route("/search_history")
 def show_search_history():
     if "user_id" in session:
-        user_id = session["user_id"]
-        with app.app_context():
-            db = get_db()
-            c = db.cursor()
-            search_history = utils.get_search_history(c, user_id) 
+        try:
+            user_id = session["user_id"]
+            search_history = SearchHistory.query.filter_by(user_id=user_id).all()
             return render_template("results.html", search_history=search_history, all_searches=True)
+        except Exception as e:
+            return render_template("results.html", error_message=str(e))
     else:
         return redirect(url_for("login_handler"))
 
 @app.route("/popular_searches")
 def show_popular_searches():
     if "user_id" in session:
-        user_id = session["user_id"]
-        with app.app_context():
-            db = get_db()
-            c = db.cursor()
-            popular_searches = utils.get_most_popular_searches(c, user_id) 
+        try:
+            user_id = session["user_id"]
+            popular_searches = db.session.query(SearchHistory.place_name, SearchHistory.address, func.count(SearchHistory.place_name).label("search_count")).\
+                filter(SearchHistory.user_id == user_id).\
+                group_by(SearchHistory.place_name, SearchHistory.address).\
+                order_by(desc("search_count")).\
+                limit(10).all()
+
+            print(popular_searches)
+
             return render_template("results.html", popular_searches=popular_searches)
+        except Exception as e:
+            return render_template("results.html", error_message=str(e))
     else:
         return redirect(url_for("login_handler"))
-
-@app.route("/search_keyword", methods=["GET", "POST"])
-def search_keyword():
-    if request.method == "POST":
-        keyword = request.form["keyword"]
-        if len(keyword) < 2:
-            error_message = "Keyword must be at least 2 characters."
-            return render_template("results.html", show_search_form=True, error_message=error_message)
-
-        user_id = session.get("user_id")
-
-        with app.app_context():
-            db = get_db()
-            c = db.cursor()
-            search_results = utils.search_history(c, user_id, keyword)
-
-        return render_template("results.html", show_search_form=True, search_results=search_results, keyword=keyword)
-
-    return render_template("results.html", show_search_form=True)
 
 
 if __name__ == "__main__":
     with app.app_context():
-        db = get_db()
-        c = db.cursor()
-        utils.create_tables(c)
-        db.commit()
-
+        db.create_all()
+    
     app.run(debug=True)
