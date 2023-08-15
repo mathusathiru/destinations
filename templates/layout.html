@@ -12,18 +12,20 @@
 <body>
 
     <div id="header">
-        <a href="{{ url_for('home') }}"><img src="{{ image_url }}" alt="Logo" id="logo"></a>        
-        <div id="button-container">
+        <a href="{{ url_for('home') }}"><img src="{{ image_url }}" alt="Logo" id="logo"></a>
+        <div id="menu-buttons">
             {% if 'user_id' in session %}
-                <a href="{{ url_for('account') }}"><button id="btn-account">Account</button></a>
+                <a href="{{ url_for('account') }}" class="btn btn-primary" id="account-btn">Account</a>
             {% else %}
-                <a href="{{ url_for('register') }}"><button id="btn-signup">Sign Up</button></a>
-                <a href="{{ url_for('login_handler') }}"><button id="btn-login">Login</button></a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary" id="register-btn">Register</a>
+                <a href="{{ url_for('login_handler') }}" class="btn btn-primary" id="login-btn">Login</a>
             {% endif %}
         </div>
-    </div>
+    </div>    
+    
 
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
 
     <footer>
         <p>© HotelHelp 2023</p>
