@@ -12,7 +12,7 @@
 
         {% if all_searches and request.path != '/search_keyword' %}
             <div id="search-history-container">
-                <h4>All Search History</h4>
+                <h4>All Locations</h4>
                 <div id="search-history">
                     {% if search_history %}
                         <ul>
@@ -42,7 +42,7 @@
 
         {% elif not all_searches and request.path != '/search_keyword' %}
             <div id="search-history-container">
-                <h4>Popular Searches</h4>
+                <h4>Top Locations</h4>
                 <div id="search-history">
                     {% if popular_searches %}
                         <ul>

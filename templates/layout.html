@@ -12,13 +12,14 @@
 <body>
 
     <div id="header">
-        <a href="{{ url_for('home') }}"><img src="{{ image_url }}" alt="Logo" id="logo"></a>
+
+        <a href="{{ url_for('home') }}" id="logo-container"><img src="{{ image_url }}" alt="Logo" id="logo"></a>        
         <div id="menu-buttons">
             {% if 'user_id' in session %}
-                <a href="{{ url_for('account') }}" class="btn btn-primary" id="account-btn">Account</a>
+                <a href="{{ url_for('account') }}" class="btn custom-button-color" id="account-btn">Account</a>
             {% else %}
-                <a href="{{ url_for('register') }}" class="btn btn-primary" id="register-btn">Register</a>
-                <a href="{{ url_for('login_handler') }}" class="btn btn-primary" id="login-btn">Login</a>
+                <a href="{{ url_for('register') }}" class="btn custom-button-color" id="register-btn">Register</a>
+                <a href="{{ url_for('login_handler') }}" class="btn custom-button-color" id="login-btn">Login</a>
             {% endif %}
         </div>
     </div>    
