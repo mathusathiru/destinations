@@ -1,6 +1,7 @@
 @import url("base.css");
 
 #search-container {
+  margin-top: 35px;
   display: flex;
   align-items: flex-start;
 }
@@ -10,14 +11,17 @@
   margin-left: 25px;
 }
 
+#radius-categories h4, #place-categories h4{
+  color: #3ee8e8;
+  margin-bottom: 25px;
+}
+
 #radius-categories h4 {
   margin-top: 5px;
-  margin-bottom: 25px;
 }
 
 #place-categories h4 {
   margin-top: 25px;
-  margin-bottom: 25px;
 }
 
 #search-bar {
@@ -31,13 +35,20 @@
   border-radius: 4px;
   font-size: 16px;
   height: 50px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   margin-right: 10px;
+  transition: border-color 0.3s ease;
+}
+
+#search:focus {
+  border: 2px solid #AEEEEE;
+  outline: none;
 }
 
 #search-button {
   width: 150px;
   height: 50px;
+  border-radius: 5px;
 }
 
 #error-container {
@@ -46,4 +57,14 @@
 
 .form-check {
   padding: 7.5px;
+}
+
+.form-check-input[type="radio"]:checked {
+  border-color: #AEEEEE;
+  background-color: #AEEEEE;
+}
+
+.form-check-input[type="checkbox"]:checked {
+  border-color: #AEEEEE;
+  background-color: #AEEEEE;
 }

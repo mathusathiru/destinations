@@ -7,6 +7,10 @@
     position: relative;
 }
 
+#search-link {
+    width: 100px;
+}
+
 #index-container {
     padding: 70px;
     margin-left: 200px;
@@ -22,6 +26,7 @@
     width: 300px;
 }
 
-#tagline-text {
-    margin-top: 10px;
+#tagline {
+    margin-bottom: 15px;
+    color: #3ee8e8;
 }

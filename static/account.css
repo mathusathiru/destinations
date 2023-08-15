@@ -13,7 +13,7 @@ body, .site-footer {
 }
 
 #user-container div {
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 #user-container button {
@@ -21,6 +21,7 @@ body, .site-footer {
 }
 
 #user-message p {
+    margin-top: 45px;
   text-align: center;
 }
 

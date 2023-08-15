@@ -8,9 +8,10 @@
   display: flex;
   align-items: center;
   padding: 50px;
+  background-color: #AEEEEE;
 }
 
-#header #logo {
+#header a {
   margin-left: 50px;
 }
 
@@ -20,7 +21,7 @@
   align-items: center; 
 }
 
-#menu-buttons .btn.btn-primary {
+#menu-buttons .btn.custom-button-color {
   margin: 5px 50px 5px 5px;
   padding: 10px 20px;
   border: none;
@@ -28,6 +29,18 @@
   font-size: 16px;
   cursor: pointer;
   text-decoration: none;
+  color: #AAEEEE;
+  background-color: white;
+}
+
+#menu-buttons .btn.custom-button-color:hover {
+  color: white;
+  background-color: #3ee8e8;
+}
+
+#menu-buttons .btn.custom-button-color:active {
+  background-color: white;
+  color: #AAEEEE;
 }
 
 button {
@@ -38,10 +51,17 @@ button {
     font-size: 16px;
     cursor: pointer;
     text-decoration: none;
+    background-color: #AAEEEE;
+    color: white;
 }
 
+button:hover {
+  background-color: #3ee8e8;
+}
+
+
 footer {
-  background-color: #f8f9fa;
+  background-color: #AEEEEE;
   padding: 20px;
   text-align: center;
   position: relative;
@@ -51,4 +71,5 @@ footer {
 footer p {
     margin-left: 10px;
     margin-top: 5px;
+    color: white;
 }
