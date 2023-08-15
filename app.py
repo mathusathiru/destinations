@@ -63,7 +63,7 @@ def search_location():
 @app.route("/register.html", methods=["GET", "POST"])
 def register():
     username_error = ""
-    
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
