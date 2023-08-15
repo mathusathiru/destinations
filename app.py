@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from database import User, SearchHistory, db
 from sqlalchemy import func, desc
+import database
 import bcrypt
 import config
 import utils
@@ -45,15 +46,7 @@ def search_location():
 
         user_id = session.get("user_id")
 
-        print(f"Query: {query}")
-        print(f"Latitude: {latitude}, Longitude: {longitude}")
-        print(f"Categories: {categories_str}")
-        print(f"Radius: {radius}")
-        print(f"User ID: {user_id}")
-
         results = utils.get_destinations(latitude, longitude, categories_str, radius, user_id, db.session)
-
-        print("Results:", results)
 
         return jsonify({"results": results})
 
@@ -73,7 +66,7 @@ def register():
         if existing_user:
             username_error = "Username already exists - try another"
         else:
-            hashed_password = utils.hash_password(password)
+            hashed_password = database.hash_password(password)
             new_user = User(username=username, password=hashed_password)
             db.session.add(new_user)
             db.session.commit()
@@ -133,7 +126,7 @@ def search_keyword():
             if user_id is None:
                 return redirect(url_for("login_handler"))
     
-            search_results = utils.search_history(db.session, user_id, keyword)
+            search_results = database.search_history(db.session, user_id, keyword)
     
             return render_template("results.html", show_search_form=True, search_results=search_results, keyword=keyword)
         except Exception as e:
