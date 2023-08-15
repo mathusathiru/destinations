@@ -11,6 +11,7 @@ app.secret_key = config.key3
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotelhelper.db'
 db.init_app(app)
 
+
 @app.teardown_appcontext
 def close_db(exception):
     db.session.remove()
@@ -53,7 +54,7 @@ def search_location():
     except Exception as e:
         print("Error:", e)
         return jsonify({"error": str(e)})
-    
+
 @app.route("/register.html", methods=["GET", "POST"])
 def register():
     username_error = ""

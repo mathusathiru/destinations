@@ -1,5 +1,4 @@
-from utils import enter_query, generate_checkboxes, get_coordinates, get_destinations, hash_password, create_tables, save_search_history, get_search_history, get_most_popular_searches, search_history 
-
+from utils import enter_query, generate_checkboxes, get_coordinates, get_destinations, hash_password, create_tables, save_search_history, get_search_history, get_most_popular_searches, search_history
 from unittest.mock import patch, MagicMock
 import unittest
 
@@ -309,6 +308,7 @@ class TestSearchKeyword(unittest.TestCase):
             ('Keyword D', 'Keyword D', '2023-08-04 12:00:00'),
         ]
         self.assertEqual(result, expected_result)
+
 
 if __name__ == '__main__':
     unittest.main()

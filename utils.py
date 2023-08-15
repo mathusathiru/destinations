@@ -32,7 +32,6 @@ def generate_checkboxes():
         checkbox_str += f'<label class="form-check-label" for="checkbox_{counter}">{name}</label>'
         checkbox_str += '</div>'
 
-
         checkboxes += checkbox_str
 
         counter += 1
