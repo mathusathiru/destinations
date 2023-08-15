@@ -31,8 +31,8 @@ document.getElementById("search-form").addEventListener('submit', async function
 
                 const newMapContainer = document.createElement('div');
                 newMapContainer.id = 'map';
-                newMapContainer.style.width = '100%';
-                newMapContainer.style.height = '500px';
+                newMapContainer.style.width = '96.5%';
+                newMapContainer.style.height = '600px';
                 resultsContainer.appendChild(newMapContainer);
 
                 const map = L.map('map').setView([51.61794, -0.017785], 14);
