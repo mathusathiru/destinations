@@ -43,3 +43,7 @@
 #error-container {
   margin-top: 20px;
 }
+
+.form-check {
+  padding: 7.5px;
+}

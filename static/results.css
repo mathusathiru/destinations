@@ -3,6 +3,9 @@
 .container {
     margin-left: 250px;
     width: 1000px;
+    min-height: calc(64.5vh - 50px);
+    position: relative;
+    border: 1px solid transparent;
 }
 
 .pagination {
@@ -31,7 +34,6 @@
     background-color: black;
     color: #fff;
 }
-
 
 #search-input {
     width: 750px;
@@ -69,9 +71,7 @@ ul {
 }
 
 .container p {
-    color: red;
-    margin-top: 10px;
-    margin-left: 10px;
+    margin-top: 30px;
 }
 
 h4 {
@@ -80,7 +80,6 @@ h4 {
 }
 
 .search-container {
-    min-height: calc(64.5vh - 50px); /* Subtract footer height */
-    position: relative; /* Required for absolute positioning of footer */
+    width: 930px;
+    margin-left: 17.5px;
 }
-

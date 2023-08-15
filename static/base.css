@@ -29,19 +29,19 @@ button {
 }
 
 #btn-login {
-    margin-left: 150px;
+    margin-left: 140px;
 }
 
 #btn-account {
-  margin-left: 85px;
+  margin-left: 215px;
 }
 
 footer {
   background-color: #f8f9fa;
   padding: 20px;
   text-align: center;
-  position: relative; /* Set the position to relative */
-  margin-top: 20px; /* Add margin to create space below the content */
+  position: relative;
+  margin-top: 20px;
 }
 
 footer p {
