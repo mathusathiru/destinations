@@ -12,6 +12,12 @@
   <p>Welcome back {{ session['username'] }}!</p>
 </div>
 
+{% if error_message %}
+<div id="error-message">
+  <p>{{ error_message }}</p>
+</div>
+{% endif %}
+
   <div id="user-container">
 
     <div id="search-button">

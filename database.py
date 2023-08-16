@@ -72,3 +72,15 @@ def search_history(db_session, user_id, keyword):
         filter(SearchHistory.user_id == user_id).\
         filter(or_(SearchHistory.place_name.ilike(f"%{keyword}%"), SearchHistory.address.ilike(f"%{keyword}%"))).\
         all()
+
+# function to delete a user account and its associated search history
+def delete_account(db_session, user_id):
+    # obtain the user through user_id 
+    user = User.query.get(user_id)  # Get the user by user_id
+
+    # delete the user's search history in search_history table
+    SearchHistory.query.filter_by(user_id=user_id).delete()
+
+    # delete the user from users table and commit to the database
+    db_session.delete(user)
+    db_session.commit()
