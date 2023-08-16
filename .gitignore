@@ -1,2 +1,2 @@
 config.py
-*.cpython-39.pyc
+__pycache__/
