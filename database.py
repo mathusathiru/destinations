@@ -75,12 +75,18 @@ def search_history(db_session, user_id, keyword):
 
 # function to delete a user account and its associated search history
 def delete_account(db_session, user_id):
-    # obtain the user through user_id 
-    user = User.query.get(user_id)  # Get the user by user_id
+    # obtain the user through user_id
+    user = db_session.get(User, user_id)
 
-    # delete the user's search history in search_history table
-    SearchHistory.query.filter_by(user_id=user_id).delete()
+    if user:
+        # delete the user's search history in search_history table
+        SearchHistory.query.filter_by(user_id=user_id).delete()
 
-    # delete the user from users table and commit to the database
-    db_session.delete(user)
-    db_session.commit()
+        # delete the user from users table and commit to the database
+        db_session.delete(user)
+        db_session.commit()
+        
+        return True 
+    else:
+        # return False for any unexpected issues
+        return False
