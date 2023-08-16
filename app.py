@@ -8,7 +8,7 @@ import utils
 
 app = Flask(__name__)
 app.secret_key = config.key3
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotelhelper.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hotelhelper.db"
 db.init_app(app)
 
 
@@ -19,12 +19,12 @@ def close_db(exception):
 
 @app.context_processor
 def inject_image_url():
-    return {'image_url': url_for('static', filename='images/logo.png')}
+    return {"image_url": url_for("static", filename="images/logo.png")}
 
 
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
 @app.route("/search.html", methods=["GET"])
@@ -130,18 +130,18 @@ def search_keyword():
             if len(keyword) < 2:
                 error_message = "Keyword must be at least 2 characters."
                 return render_template("results.html", show_search_form=True, error_message=error_message)
-    
+
             user_id = session.get("user_id")
-    
+
             if user_id is None:
                 return redirect(url_for("login_handler"))
-    
+
             search_results = database.search_history(db.session, user_id, keyword)
     
             return render_template("results.html", show_search_form=True, search_results=search_results, keyword=keyword)
         except Exception as e:
             return render_template("results.html", show_search_form=True, error_message=str(e))
-    
+
     return render_template("results.html", show_search_form=True)
 
 
@@ -151,13 +151,13 @@ def delete_account():
         try:
             user_id = session["user_id"]
             user = User.query.get(user_id)
-    
+
             if user:
                 SearchHistory.query.filter_by(user_id=user_id).delete()
-    
+
                 db.session.delete(user)
                 db.session.commit()
-    
+
                 session.clear()
                 return redirect(url_for("home"))
         except Exception as e:

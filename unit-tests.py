@@ -39,6 +39,7 @@ class TestGenerateCheckboxes(unittest.TestCase):
         self.assertIn(expected_structure, checkboxes_left)
         self.assertIn(expected_structure, checkboxes_right)
 
+
 class TestGetCoordinatesFunction(unittest.TestCase):
     @patch("requests.get")
     def test_valid_location(self, mock_requests):
@@ -92,6 +93,7 @@ class TestGetCoordinatesFunction(unittest.TestCase):
         self.assertIsNone(longitude)
         self.assertEqual(error, "Error 404: Not Found")
 
+
 class TestGetDestinations(unittest.TestCase):
     @patch('requests.get')
     def test_get_destinations(self, mock_get):
@@ -108,6 +110,7 @@ class TestGetDestinations(unittest.TestCase):
         
         c.execute.assert_called_with("INSERT INTO search_history (user_id, place_name, address) VALUES (?, ?, ?)", (1, "Test Place", "123 Main St"))
         conn.commit.assert_called()
+
 
 class TestHashPassword(unittest.TestCase):
     def test_hash_password_valid(self):
@@ -135,6 +138,7 @@ class TestHashPassword(unittest.TestCase):
         self.assertIsInstance(hashed_password, str)
 
         self.assertTrue(bcrypt.checkpw(password.encode("utf-8"), hashed_password.encode("utf-8")))
+
 
 class TestCreateTables(unittest.TestCase):
     def setUp(self):
@@ -181,6 +185,7 @@ class TestCreateTables(unittest.TestCase):
         self.assertEqual(foreign_keys[0][2], "users")
         self.assertEqual(foreign_keys[0][3], "user_id")
 
+
 class TestSaveSearchHistory(unittest.TestCase):
     def setUp(self):
         self.conn = sqlite3.connect(":memory:")
@@ -211,6 +216,7 @@ class TestSaveSearchHistory(unittest.TestCase):
             self.assertEqual(saved_data[i][1], result["name"])
             self.assertEqual(saved_data[i][2], result["location"]["formatted_address"])
 
+
 class TestGetSearchHistory(unittest.TestCase):
 
     def setUp(self):
@@ -239,6 +245,7 @@ class TestGetSearchHistory(unittest.TestCase):
         actual_result = sorted(result, key=lambda x: x[2], reverse=True)
 
         self.assertEqual(actual_result, expected_result)
+
 
 class TestGetMostPopularSearches(unittest.TestCase):
 
@@ -274,6 +281,7 @@ class TestGetMostPopularSearches(unittest.TestCase):
         actual_result = sorted(result, key=lambda x: (-x[2], x[0], x[1]))
 
         self.assertEqual(actual_result, expected_result)
+
 
 class TestSearchKeyword(unittest.TestCase):
 
