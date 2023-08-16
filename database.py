@@ -29,9 +29,8 @@ def hash_password(password):
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed_password.decode("utf-8")
 
-
 def save_search_history(db_session, user_id, results):
-    user = db_session.query(User).get(user_id)
+    user = db_session.get(User, user_id)
     if user:
         for result in results:
             place_name = result["name"]
