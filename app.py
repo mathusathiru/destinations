@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-from database import User, SearchHistory, db
+from database import User, db
 import database
 import bcrypt
 import config
@@ -57,15 +57,8 @@ def search_location():
         return jsonify({"error": str(e)})
 
 
-@app.route("/register.html", methods=["GET"])
-def show_registration_form():
-    username_error = ""
-    return render_template("register.html", username_error=username_error)
-
-
-@app.route("/register.html", methods=["POST"])
-def process_registration():
-
+@app.route("/register.html", methods=["GET", "POST"])
+def register():
     username_error = ""
 
     if request.method == "POST":
@@ -76,8 +69,8 @@ def process_registration():
         if user:
             username_error = "Username already exists - try another"
         else:
-            hashed_password = database.hash_password(password)
-            new_user = User(username=username, password=hashed_password)
+            hashed_password = database.hash_password(password)  # Hash the password
+            new_user = User(username=username, password=hashed_password)  # Create a new user instance with the hashed password
 
             db.session.add(new_user)
             db.session.commit()
@@ -91,13 +84,8 @@ def process_registration():
     return render_template("register.html", username_error=username_error)
 
 
-@app.route("/login.html", methods=["GET"])
-def show_login_form():
-    return render_template("login.html")
-
-
-@app.route("/login.html", methods=["POST"])
-def process_login():
+@app.route("/login.html", methods=["GET", "POST"])
+def login_handler():
     if request.method == "POST":
         try:
             username = request.form.get("username")
@@ -114,6 +102,8 @@ def process_login():
                 return render_template("login.html", error_message=error_message)
         except Exception as e:
             return render_template("login.html", error_message=str(e))
+    else:
+        return render_template("login.html")
 
 
 @app.route("/account.html")
@@ -131,10 +121,9 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-
 @app.route("/delete_account", methods=["POST"])
 def delete_account():
-    user_id = session["user_id"]
+    user_id = session.get("user_id")
 
     if database.delete_account(db.session, user_id):
         session.clear()
@@ -143,13 +132,8 @@ def delete_account():
         return render_template("account.html", error_message="Failed to delete account")
 
 
-@app.route("/search_keyword", methods=["GET"])
-def show_search_form():
-    return render_template("results.html", show_search_form=True)
-
-
-@app.route("/search_keyword", methods=["POST"])
-def process_search():
+@app.route("/search_keyword", methods=["GET", "POST"])
+def search_keyword():
     if request.method == "POST":
         try:
             keyword = request.form["keyword"]
@@ -164,6 +148,8 @@ def process_search():
             return render_template("results.html", show_search_form=True, search_results=search_results, keyword=keyword)
         except Exception as e:
             return render_template("results.html", show_search_form=True, error_message=str(e))
+    else:
+        return render_template("results.html", show_search_form=True)
 
 
 @app.route("/search_history")
