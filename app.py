@@ -137,7 +137,7 @@ def search_keyword():
                 return redirect(url_for("login_handler"))
 
             search_results = database.search_history(db.session, user_id, keyword)
-    
+
             return render_template("results.html", show_search_form=True, search_results=search_results, keyword=keyword)
         except Exception as e:
             return render_template("results.html", show_search_form=True, error_message=str(e))

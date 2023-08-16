@@ -2,6 +2,7 @@ from database import save_search_history
 import requests
 import config
 
+
 def enter_query(query):
     try:
         if len(query) < 2:
