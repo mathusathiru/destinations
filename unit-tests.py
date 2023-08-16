@@ -4,6 +4,7 @@ from unittest.mock import Mock
 from app import app
 import unittest
 
+
 class TestApp(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
