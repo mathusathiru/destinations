@@ -29,7 +29,7 @@ def hash_password(password):
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed_password.decode("utf-8")
 
-def save_search_history(db_session, user_id, results):
+def save_history(db_session, user_id, results):
     user = db_session.get(User, user_id)
     if user:
         for result in results:
@@ -40,12 +40,12 @@ def save_search_history(db_session, user_id, results):
         db_session.commit()
 
 
-def get_search_history(db_session, user_id):
+def get_history(db_session, user_id):
     return db_session.query(SearchHistory.place_name, SearchHistory.address, SearchHistory.timestamp).\
         filter(SearchHistory.user_id == user_id).all()
 
 
-def get_most_popular_searches(db_session, user_id):
+def get_top_searches(db_session, user_id):
     return db_session.query(SearchHistory.place_name, SearchHistory.address, func.count(SearchHistory.place_name).label("search_count")).\
         filter(SearchHistory.user_id == user_id).\
         group_by(SearchHistory.place_name, SearchHistory.address).\
