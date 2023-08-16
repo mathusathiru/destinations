@@ -124,9 +124,7 @@ class TestDatabase(unittest.TestCase):
             db.session.add(user)
             db.session.commit()
             user_id = user.user_id
-            results = [{"name": "Place 1", "location": {"formatted_address": "Address 1"}},
-                    {"name": "Place 2", "location": {"formatted_address": "Address 2"}},
-                    {"name": "Place A", "location": {"formatted_address": "Address A"}}]
+            results = [{"name": "Place 1", "location": {"formatted_address": "Address 1"}}, {"name": "Place 2", "location": {"formatted_address": "Address 2"}}, {"name": "Place A", "location": {"formatted_address": "Address A"}}]
             save_history(db.session, user_id, results)
             search_results = search_history(db.session, user_id, 'A')
             self.assertEqual(len(search_results), 3)
@@ -193,6 +191,7 @@ class TestUtils(unittest.TestCase):
 
         destinations = get_destinations(1.0, 2.0, "", 1000, None, None)
         self.assertEqual(len(destinations), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
