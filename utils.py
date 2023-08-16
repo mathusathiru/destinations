@@ -1,4 +1,4 @@
-from database import save_search_history
+from database import save_history
 import requests
 import config
 
@@ -25,7 +25,6 @@ def generate_checkboxes():
     }
 
     checkboxes = ""
-
     counter = 0
 
     for name, id in categories_dict.items():
@@ -95,10 +94,12 @@ def get_destinations(latitude, longitude, categories_str, radius, user_id, db_se
 
         filtered_results = []
         if "results" in data:
-            filtered_results = data["results"]
+            for result in data["results"]:
+                if "formatted_address" in result.get("location", {}):
+                    filtered_results.append(result)
 
         if user_id is not None:
-            save_search_history(db_session, user_id, filtered_results)
+            save_history(db_session, user_id, filtered_results)
 
         if response.status_code == 200:
             return filtered_results
