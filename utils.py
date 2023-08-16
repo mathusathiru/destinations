@@ -11,6 +11,7 @@ def enter_query(query):
     except ValueError:
         return None, "Error: invalid query"
 
+
 def generate_checkboxes():
     categories_dict = {
         "Arts and Entertainment": 10000,
@@ -38,6 +39,7 @@ def generate_checkboxes():
         counter += 1
 
     return checkboxes
+
 
 def generate_radio_buttons():
     values = [500, 1000, 2500, 5000, 10000]
@@ -78,6 +80,7 @@ def get_coordinates(search):
             return None, None, f"Error {status_code}: {data['status']['message']}"
     except requests.exceptions.RequestException:
         return None, None, "Error: failed to retrieve coordinates"
+
 
 def get_destinations(latitude, longitude, categories_str, radius, user_id, db_session):
     try:

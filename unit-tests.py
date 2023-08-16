@@ -107,7 +107,7 @@ class TestGetDestinations(unittest.TestCase):
         result = get_destinations(40.712776, -74.005974, "food", c, conn, 1)
 
         self.assertEqual(result, [{"name": "Test Place", "location": {"formatted_address": "123 Main St"}}])
-        
+
         c.execute.assert_called_with("INSERT INTO search_history (user_id, place_name, address) VALUES (?, ?, ?)", (1, "Test Place", "123 Main St"))
         conn.commit.assert_called()
 
@@ -234,6 +234,7 @@ class TestGetSearchHistory(unittest.TestCase):
             ('Place B', 'Address B', '2023-08-02 15:30:00'),
             ('Place C', 'Address C', '2023-08-03 09:45:00'),
         ]
+
         for data in test_data:
             self.c.execute("INSERT INTO search_history (user_id, place_name, address, timestamp) "
                            "VALUES (?, ?, ?, ?)", (user_id, data[0], data[1], data[2]))
@@ -271,6 +272,7 @@ class TestGetMostPopularSearches(unittest.TestCase):
             ('Place D', 'Address D'),
             ('Place D', 'Address D'),
         ]
+
         for data in test_data:
             self.c.execute("INSERT INTO search_history (user_id, place_name, address) "
                            "VALUES (?, ?, ?)", (user_id, data[0], data[1]))
