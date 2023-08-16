@@ -102,7 +102,7 @@ def login_handler():
                 return render_template("login.html", error_message=error_message)
         except Exception as e:
             return render_template("login.html", error_message=str(e))
-    
+
     return render_template("login.html")
 
 
@@ -162,7 +162,7 @@ def delete_account():
                 return redirect(url_for("home"))
         except Exception as e:
             return render_template("index.html", error_message=str(e))
-    
+
     return redirect(url_for("home"))
 
 
@@ -202,5 +202,5 @@ def show_popular_searches():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    
+
     app.run(debug=True)

@@ -14,6 +14,7 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
+
 class SearchHistory(db.Model):
     __tablename__ = 'search_history'
     search_id = db.Column(db.Integer, primary_key=True)
@@ -22,10 +23,12 @@ class SearchHistory(db.Model):
     address = db.Column(db.String, nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.now())
 
+
 def hash_password(password):
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed_password.decode("utf-8")
+
 
 def save_search_history(db_session, user_id, results):
     user = db_session.query(User).get(user_id)
@@ -37,9 +40,11 @@ def save_search_history(db_session, user_id, results):
             db_session.add(search_history)
         db_session.commit()
 
+
 def get_search_history(db_session, user_id):
     return db_session.query(SearchHistory.place_name, SearchHistory.address, SearchHistory.timestamp).\
         filter(SearchHistory.user_id == user_id).all()
+
 
 def get_most_popular_searches(db_session, user_id):
     return db_session.query(SearchHistory.place_name, SearchHistory.address, func.count(SearchHistory.place_name).label("search_count")).\
@@ -47,6 +52,7 @@ def get_most_popular_searches(db_session, user_id):
         group_by(SearchHistory.place_name, SearchHistory.address).\
         order_by(desc("search_count")).\
         limit(10).all()
+
 
 def search_history(db_session, user_id, keyword):
     return db_session.query(SearchHistory.place_name, SearchHistory.address, SearchHistory.timestamp).\
