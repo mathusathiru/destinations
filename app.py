@@ -91,7 +91,7 @@ def login_handler():
         try:
             username = request.form.get("username")
             password = request.form.get("password")
-    
+
             user = User.query.filter_by(username=username).first()
             if user and bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8")):
                 session["user_id"] = user.user_id
