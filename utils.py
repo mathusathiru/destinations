@@ -29,7 +29,8 @@ def generate_checkboxes():
         "Travel and Transportation": 19000,
     }
 
-    checkboxes = "" # string to store all categories in categories
+    # string to store all categories in categories, and counter for checkbox IDs and labels
+    checkboxes = ""
     counter = 0
 
     # iterate through categories to generate HTML checkboxes from all categories, including divs, classes and ids for CSS, and accompanying label
@@ -153,7 +154,7 @@ def get_destinations(latitude, longitude, categories, radius, user_id, db_sessio
             else: 
                 return "No valid locations found for this area"
 
-         # return API error message if the status code is not 200
+        # return API error message if the status code is not 200
         else:
             return f"Error: {data['message']}"
 

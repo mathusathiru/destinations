@@ -46,11 +46,11 @@ def search_page():
 @app.route("/search", methods=["POST"])
 def search_location():
     try:
-        # obtain query value from an input box in a form 
+        # obtain query value from an input box in a form
         query = request.form["search"]
         # check validity of query with enter_query function, returning the query or an erorr message
         query, error_message = utils.enter_query(query)
-        # if the query is None, return a JSON response with the error_message 
+        # if the query is None, return a JSON response with the error_message
         if not query:
             return jsonify({"error": error_message})
         # obtain latitude and longitude from get_coordinates function, or error_message in cases of error
@@ -66,13 +66,13 @@ def search_location():
         user_id = session.get("user_id")
         # obtain locations with get_destinations taking parameters from get_coordinates, form values and database-related values to save the locations to the user account if logged in
         results = utils.get_destinations(latitude, longitude, categories_str, radius, user_id, db.session)
-        # return JSON response with location results 
+        # return JSON response with location results
         return jsonify({"results": results})
     except Exception as e:
         # return JSON response with error message in cases of unknown error
         return jsonify({"error": str(e)})
 
-# route for register.html URL Flask app path, with GET and POST methods 
+# route for register.html URL Flask app path, with GET and POST methods
 @app.route("/register.html", methods=["GET", "POST"])
 def register():
     # create username_error variable, utilised if there is an issue in registration (username already existing)
@@ -92,7 +92,7 @@ def register():
             hashed_password = database.hash_password(password)
             # create new User instance with the username and hashed password a new User instance
             new_user = User(username=username, password=hashed_password)
-            # add the new_user instance to the database session and commit changes 
+            # add the new_user instance to the database session and commit changes
             db.session.add(new_user)
             db.session.commit()
             # set user_id and username values in the session from the new_user instance
@@ -104,7 +104,7 @@ def register():
     # if the username already exists, return register.html with the username_error for the user, prompting them to try a different username
     return render_template("register.html", username_error=username_error)
 
-# route for login.html URL Flask app path, with GET and POST methods 
+# route for login.html URL Flask app path, with GET and POST methods
 @app.route("/login.html", methods=["GET", "POST"])
 def login_handler():
     # if the request.method is POST, handle the form on login.html
@@ -222,7 +222,7 @@ def show_popular_searches():
         user_id = session["user_id"]
         # obtain the top ten locations for the user from get_top_searches function in database.py
         popular_searches = database.get_top_searches(db.session, user_id)
-        # render results.html with the top ten locations 
+        # render results.html with the top ten locations
         return render_template("results.html", popular_searches=popular_searches)
     else:
         # redirect user to login page in the case they are not logged in

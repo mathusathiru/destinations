@@ -1,6 +1,7 @@
 import unittest
 from app import app
 
+
 class TestApp(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
@@ -71,13 +72,13 @@ class TestApp(unittest.TestCase):
         response = self.app.post("/delete_account")
         self.assertEqual(response.status_code, 200)
 
-
     def test_delete_account_failure(self):
         with self.app.session_transaction() as session:
             session["user_id"] = 99999
         response = self.app.post("/delete_account")
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Failed to delete account", response.data)
+
 
 if __name__ == "__main__":
     unittest.main()

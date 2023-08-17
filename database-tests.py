@@ -48,9 +48,7 @@ class TestDatabase(unittest.TestCase):
             db.session.add(user)
             db.session.commit()
             user_id = user.user_id
-            results = [{"name": "Eiffel Tower", "location": {"formatted_address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"}},
-                    {"name": "Eiffel Tower", "location": {"formatted_address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"}},
-                    {"name": "Louvre Museum", "location": {"formatted_address": "Rue de Rivoli, 75001 Paris, France"}}]
+            results = [{"name": "Eiffel Tower", "location": {"formatted_address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"}}, {"name": "Eiffel Tower", "location": {"formatted_address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"}}, {"name": "Louvre Museum", "location": {"formatted_address": "Rue de Rivoli, 75001 Paris, France"}}]
             save_history(db.session, user_id, results)
             most_popular_searches = get_top_searches(db.session, user_id)
             self.assertEqual(len(most_popular_searches), 2)
@@ -63,7 +61,7 @@ class TestDatabase(unittest.TestCase):
             db.session.add(user)
             db.session.commit()
             user_id = user.user_id
-            results = [{"name": "Eiffel Tower", "location": {"formatted_address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"}},{"name": "Louvre Museum", "location": {"formatted_address": "Rue de Rivoli, 75001 Paris, France"}}]
+            results = [{"name": "Eiffel Tower", "location": {"formatted_address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"}}, {"name": "Louvre Museum", "location": {"formatted_address": "Rue de Rivoli, 75001 Paris, France"}}]
 
     def test_delete_account(self):
         with app.app_context():

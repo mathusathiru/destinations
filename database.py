@@ -85,7 +85,7 @@ def delete_account(db_session, user_id):
         # delete the user from users table and commit to the database
         db_session.delete(user)
         db_session.commit()
-        
+
         return True 
     else:
         # return False for any unexpected issues
