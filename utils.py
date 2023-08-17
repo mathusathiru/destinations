@@ -66,7 +66,7 @@ def generate_radio_buttons():
         radius_buttons += button_str
 
     # jinja in HTML will work with the radius_buttons string to display individual checkboxes
-    return radius_buttons 
+    return radius_buttons
 
 # utilises OpenCage API to retrieve valid latitude and longitude values for a user input location, returning error messages for invalid locations
 def get_coordinates(search):

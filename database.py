@@ -12,12 +12,14 @@ db = SQLAlchemy()
 # base class for declarative models
 Base = declarative_base()
 
+
 # creating the users table, with an integer ID as the primary key and non-null username and password columns
 class User(db.Model):
     __tablename__ = "users"
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
+
 
 # creating the search_history table, with an search ID as the primary key and all other columns not null
 # user_id is a foreign key from the users table, and the timestamp column contains the date and time at the time of SQL query execution
