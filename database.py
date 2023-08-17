@@ -31,11 +31,13 @@ class SearchHistory(db.Model):
     address = db.Column(db.String, nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.now())
 
+
 # function to hash a password with bycrypt import, utilising a salt and returning the password as a UTF-8 encoded string
 def hash_password(password):
     salt = bcrypt.gensalt()  # Generate a salt for password hashing
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed_password.decode("utf-8")
+
 
 # function to save generated locations to the database for a user
 def save_history(db_session, user_id, results):
@@ -52,6 +54,7 @@ def save_history(db_session, user_id, results):
             db_session.add(search_history)
         db_session.commit()
 
+
 # function to retrieve all locations for a specific user
 def get_history(db_session, user_id):
     # execute query to the search_history table for place name, address, and timestamp of all entries for a specific  user_id
@@ -67,6 +70,7 @@ def get_top_searches(db_session, user_id):
         order_by(desc("search_count")).\
         limit(10).all()
 
+
 # function to search for results across the user history based on a keyword
 def search_history(db_session, user_id, keyword):
     # obtain place name, addresse and timestamp of entries for the specified user_id where the place name or the address contains the specified keyword, case-insensitive
@@ -74,6 +78,7 @@ def search_history(db_session, user_id, keyword):
         filter(SearchHistory.user_id == user_id).\
         filter(or_(SearchHistory.place_name.ilike(f"%{keyword}%"), SearchHistory.address.ilike(f"%{keyword}%"))).\
         all()
+
 
 # function to delete a user account and its associated search history
 def delete_account(db_session, user_id):
@@ -92,6 +97,7 @@ def delete_account(db_session, user_id):
     else:
         # return False for any unexpected issues
         return False
+
 
 # function to verify password input on a login page against the password stored in the database
 def verify_password(input_password, hashed_password):

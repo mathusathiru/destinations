@@ -154,7 +154,7 @@ def get_destinations(latitude, longitude, categories, radius, user_id, db_sessio
             if len(filtered_results) > 0:
                 return filtered_results
             # return a message if filtered_lists results is empty, indicating that no valid locations were found
-            else: 
+            else:
                 return "No valid locations found for this area"
 
         # return API error message if the status code is not 200
