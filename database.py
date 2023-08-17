@@ -61,6 +61,7 @@ def get_history(db_session, user_id):
     return db_session.query(SearchHistory.place_name, SearchHistory.address, SearchHistory.timestamp).\
         filter(SearchHistory.user_id == user_id).all()
 
+
 # function to get the top 10 top search queries for a specific user, obtaining the place name and address
 def get_top_searches(db_session, user_id):
     # obtain the top 10 results through ordering the search count in descending order for all unique entries for a specific user
