@@ -21,17 +21,20 @@ def close_db(exception):
     # removes current session from database object
     db.session.remove()
 
+
 # function to process image into a template context
 @app.context_processor
 def inject_image_url():
     # static image to be used in website header which contains a link to the index page (handled in layout.html)
     return {"image_url": url_for("static", filename="images/logo.png")}
 
+
 # route for the root Flask app url, the homepage
 @app.route("/")
 def home():
     # renders index.html template
     return render_template("index.html")
+
 
 # route for the search.html URL Flask app path, utilising the GET method
 @app.route("/search.html", methods=["GET"])
@@ -42,6 +45,7 @@ def search_page():
     radius_buttons = utils.generate_radio_buttons()
     # renders search.html template with checkboxes and radius_buttons to display
     return render_template("search.html", checkboxes=checkboxes, radius_buttons=radius_buttons)
+
 
 # route for search.html URL Flask app path, utilising the POST method
 @app.route("/search", methods=["POST"])
@@ -72,6 +76,7 @@ def search_location():
     except Exception as e:
         # return JSON response with error message in cases of unknown error
         return jsonify({"error": str(e)})
+
 
 # route for register.html URL Flask app path, with GET and POST methods
 @app.route("/register.html", methods=["GET", "POST"])
@@ -105,6 +110,7 @@ def register():
     # if the username already exists, return register.html with the username_error for the user, prompting them to try a different username
     return render_template("register.html", username_error=username_error)
 
+
 # route for login.html URL Flask app path, with GET and POST methods
 @app.route("/login.html", methods=["GET", "POST"])
 def login_handler():
@@ -133,6 +139,7 @@ def login_handler():
     else:
         # render login.html if the request.method is GET
         return render_template("login.html")
+
 
 # route for account.html URL Flask app path
 @app.route("/account.html")
@@ -199,6 +206,7 @@ def search_keyword():
         # if the request.method is GET, render results.html with the search form visible, to search for places
         return render_template("results.html", show_search_form=True)
 
+
 # route for /search_history Flask app path
 @app.route("/search_history")
 def show_search_history():
@@ -213,6 +221,7 @@ def show_search_history():
     else:
         # redirect user to login page in the case they are not logged in
         return redirect(url_for("login_handler"))
+
 
 # route for /popular_searches Flask app path
 @app.route("/popular_searches")

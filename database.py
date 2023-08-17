@@ -19,7 +19,7 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
-# creating the search_history table, with an search ID as the primary key and all other columns not null 
+# creating the search_history table, with an search ID as the primary key and all other columns not null
 # user_id is a foreign key from the users table, and the timestamp column contains the date and time at the time of SQL query execution
 class SearchHistory(db.Model):
     __tablename__ = "search_history"
