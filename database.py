@@ -90,3 +90,7 @@ def delete_account(db_session, user_id):
     else:
         # return False for any unexpected issues
         return False
+
+# function to verify password input on a login page against the password stored in the database
+def verify_password(input_password, hashed_password):
+    return bcrypt.checkpw(input_password.encode("utf-8"), hashed_password.encode("utf-8"))
