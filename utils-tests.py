@@ -64,5 +64,6 @@ class TestUtils(unittest.TestCase):
         destinations = get_destinations(1.0, 2.0, "", 1000, None, None)
         self.assertEqual(len(destinations), 1)
 
+
 if __name__ == '__main__':
     unittest.main()

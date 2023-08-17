@@ -14,6 +14,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hotelhelper.db"
 # initialise database object with the Flask app
 db.init_app(app)
 
+
 # function to remove database session when the app context is torn down
 @app.teardown_appcontext
 def close_db(exception):
@@ -99,7 +100,7 @@ def register():
             user_id = new_user.user_id
             session["user_id"] = user_id
             session["username"] = username
-            # redirect the now logged in user the account page 
+            # redirect the now logged in user the account page
             return redirect(url_for("account"))
     # if the username already exists, return register.html with the username_error for the user, prompting them to try a different username
     return render_template("register.html", username_error=username_error)

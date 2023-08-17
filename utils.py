@@ -105,8 +105,11 @@ def get_coordinates(search):
             return None, None, f"Error {status_code}: {data['status']['message']}"
 
     # except block error message for unknown cases of error
-    except:
-        return None, None, "Error: failed to retrieve coordinates"
+    except requests.exceptions.ConnectionError:
+        return "Error: connection failure - check your internet connection"
+    except Exception:
+        return "Error: failed to retrieve destinations"
+
 
 # utilises FourSquare API to retrieve list of valid location results, and saves results to user's search history if they are logged in
 # parameters include latitude and longitude values returned from get_coordinates(), categories and radius from search.js form input, and the user's id and the database session to save results to history
@@ -124,7 +127,7 @@ def get_destinations(latitude, longitude, categories, radius, user_id, db_sessio
                       "sort": "DISTANCE",
                       "radius": radius,
                       "categories": categories}
-        
+
         # executing GET request to FourSquare API with URL, parameters and header
         response = requests.get(url, params=param_dict, headers=header)
 
@@ -159,5 +162,7 @@ def get_destinations(latitude, longitude, categories, radius, user_id, db_sessio
             return f"Error: {data['message']}"
 
     # except block error message for unknown cases of error
-    except:
+    except requests.exceptions.ConnectionError:
+        return "Error: connection failure - check your internet connection"
+    except Exception:
         return "Error: failed to retrieve destinations"
