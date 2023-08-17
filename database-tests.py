@@ -2,6 +2,7 @@ from database import db, User, SearchHistory, hash_password, save_history, get_h
 import unittest
 from app import app
 
+
 class TestDatabase(unittest.TestCase):
     def setUp(self):
         with app.app_context():
