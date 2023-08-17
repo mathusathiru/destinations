@@ -2,6 +2,7 @@ from database import save_history  # function from database.py
 import requests  # for AIP requests
 import config  # contains API keys
 
+
 # checks validity of user queries
 def enter_query(query):
     try:
@@ -14,6 +15,7 @@ def enter_query(query):
     except ValueError:
         # except message handles any unknown errors in the query input process
         return None, "Error: invalid query"
+
 
 # generates set of checkboxes that user can select to refine their search choices
 def generate_checkboxes():
@@ -47,6 +49,7 @@ def generate_checkboxes():
     # jinja in HTML will work with the checkboxes string to display individual checkboxes
     return checkboxes
 
+
 # generates set of radius buttons that user can select to select their radius choices
 def generate_radio_buttons():
     # list of radiuses, providing radius options the user can store
@@ -67,6 +70,7 @@ def generate_radio_buttons():
 
     # jinja in HTML will work with the radius_buttons string to display individual checkboxes
     return radius_buttons
+
 
 # utilises OpenCage API to retrieve valid latitude and longitude values for a user input location, returning error messages for invalid locations
 def get_coordinates(search):
