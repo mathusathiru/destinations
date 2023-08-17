@@ -2,6 +2,7 @@ from utils import enter_query, generate_checkboxes, generate_radio_buttons, get_
 from unittest.mock import Mock
 import unittest
 
+
 class TestUtils(unittest.TestCase):
     def test_enter_query(self):
         query, error = enter_query("test")
